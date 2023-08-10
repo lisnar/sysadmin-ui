@@ -16,6 +16,7 @@ module.exports = {
     'plugin:import/recommended',
     'plugin:import/typescript',
     'plugin:jsx-a11y/recommended',
+    'plugin:storybook/recommended',
   ],
   ignorePatterns: ['/*', '!/src'], // ignores all except `src` directory
   // Default parser & parserOptions from Vite
