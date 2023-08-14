@@ -1,21 +1,33 @@
-import { forwardRef, type ComponentPropsWithoutRef } from 'react';
-import { Spinner } from '~/components/elements/spinner';
-import { classNames } from '~/utils/classnames.ts';
+import { forwardRef, useRef } from 'react';
+import { mergeProps, useButton, useFocusRing, useHover, type AriaButtonProps } from 'react-aria';
+import { Spinner } from '../spinner';
+import { classNames, mergeRefs } from '../utils.ts';
 
-// Use ComponentProps instead of HTMLProps or HTMLAttributes.
-// https://github.com/typescript-cheatsheets/react/blob/main/docs/advanced/patterns_by_usecase.md#componentprops
-export interface ButtonProps extends ComponentPropsWithoutRef<'button'> {
+export interface ButtonProps extends AriaButtonProps {
+  className?: string;
   isLoading?: boolean;
 }
 
-export const Button = forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => {
-  const { children, className, isLoading, ...rest } = props;
+// 13-min video: Reusable button with React ARIA and Tailwind
+// https://youtu.be/d4WvtFEndnc
+
+export const Button = forwardRef<HTMLButtonElement, ButtonProps>((props, forwardedRef) => {
+  const { children, className, isLoading } = props;
+  const internalRef = useRef(null);
+
+  const { buttonProps, isPressed } = useButton(props, internalRef);
+  const { hoverProps, isHovered } = useHover(props);
+  const { focusProps, isFocused, isFocusVisible } = useFocusRing(props);
 
   return (
     <button
-      ref={ref}
+      ref={mergeRefs(internalRef, forwardedRef)}
+      {...mergeProps(buttonProps, hoverProps, focusProps)}
       className={classNames('relative inline-flex items-center justify-center', className)}
-      {...rest}
+      data-pressed={isPressed || undefined}
+      data-hovered={isHovered || undefined}
+      data-focused={isFocused || undefined}
+      data-focus-visible={isFocusVisible || undefined}
     >
       {isLoading && <Spinner className="absolute h-5 w-5" />}
       <span className={classNames('transition', isLoading && 'opacity-0')}>{children}</span>

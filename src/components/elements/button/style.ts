@@ -11,7 +11,7 @@ export const buttonClassVariant = cva(
     'rounded-md border px-3 py-2 shadow-sm', // appearance
     'outline-none ring-indigo-500 ring-offset-2', // outline
     'text-sm font-medium leading-4 tracking-tight', // content
-    'transition focus:ring-2 enabled:hover:shadow enabled:active:scale-[0.99] enabled:active:shadow-sm', // interaction
+    'transition data-[focus-visible]:ring-2 enabled:data-[pressed]:scale-[0.99] enabled:data-[hovered]:shadow enabled:data-[pressed]:shadow-sm', // interactions
     'disabled:cursor-not-allowed disabled:shadow-none', // disabled
   ],
   {
@@ -19,19 +19,23 @@ export const buttonClassVariant = cva(
       color: {
         primary: [
           'border-transparent bg-indigo-600 text-white',
-          'enabled:hover:bg-indigo-700 disabled:bg-indigo-600/50',
+          'enabled:data-[hovered]:bg-indigo-700',
+          'disabled:bg-indigo-600/50',
         ],
         secondary: [
           'border-transparent bg-indigo-100 text-indigo-700',
-          'enabled:hover:bg-indigo-200 disabled:bg-indigo-100/50 disabled:text-indigo-700/50',
+          'enabled:data-[hovered]:bg-indigo-200',
+          'disabled:bg-indigo-100/50 disabled:text-indigo-700/50',
         ],
         plain: [
           'border-gray-300 bg-white text-gray-700',
-          'enabled:hover:bg-gray-50 disabled:border-gray-300/50 disabled:text-gray-700/50',
+          'enabled:data-[hovered]:bg-gray-50',
+          'disabled:border-gray-300/50 disabled:text-gray-700/50',
         ],
         danger: [
           'border-transparent bg-red-600 text-white ring-red-500',
-          'enabled:hover:bg-red-700 disabled:bg-red-600/50',
+          'enabled:data-[hovered]:bg-red-700',
+          'disabled:bg-red-600/50',
         ],
       },
     },

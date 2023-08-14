@@ -7,7 +7,7 @@ const meta: Meta<typeof Button> = {
   component: Button,
   args: {
     children: 'Button',
-    disabled: false,
+    isDisabled: false,
     isLoading: false,
   },
   parameters: {
