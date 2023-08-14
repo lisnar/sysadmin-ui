@@ -9,12 +9,13 @@ export interface ButtonProps extends ComponentPropsWithoutRef<'button'> {
 }
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => {
-  const { children, className, isLoading } = props;
+  const { children, className, isLoading, ...rest } = props;
 
   return (
     <button
       ref={ref}
-      className={classNames('relative flex items-center justify-center', className)}
+      className={classNames('relative inline-flex items-center justify-center', className)}
+      {...rest}
     >
       {isLoading && <Spinner className="absolute h-5 w-5" />}
       <span className={classNames('transition', isLoading && 'opacity-0')}>{children}</span>
