@@ -1,9 +1,12 @@
 import { forwardRef, useRef } from 'react';
-import { mergeProps, useButton, useFocusRing, useHover, type AriaButtonProps } from 'react-aria';
+import { AriaButtonProps, mergeProps, useButton, useFocusRing, useHover } from 'react-aria';
 import { Spinner } from '../spinner';
 import { classNames, mergeRefs } from '../utils.ts';
+import { ButtonVariantProps, buttonClassVariant } from './style.ts';
 
-export interface ButtonProps extends AriaButtonProps {
+// Use `interface` here because it will generate error when extended types have conflicting properties.
+// If `type` is used, conflicting properties will quietly overwrite each other.
+export interface ButtonProps extends AriaButtonProps, ButtonVariantProps {
   className?: string;
   isLoading?: boolean;
 }
@@ -12,18 +15,18 @@ export interface ButtonProps extends AriaButtonProps {
 // https://youtu.be/d4WvtFEndnc
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>((props, forwardedRef) => {
-  const { children, className, isLoading } = props;
-  const internalRef = useRef(null);
+  const { children, className, color, isLoading } = props;
+  const ref = useRef<HTMLButtonElement>(null);
 
-  const { buttonProps, isPressed } = useButton(props, internalRef);
+  const { buttonProps, isPressed } = useButton(props, ref);
   const { hoverProps, isHovered } = useHover(props);
   const { focusProps, isFocused, isFocusVisible } = useFocusRing(props);
 
   return (
     <button
-      ref={mergeRefs(internalRef, forwardedRef)}
       {...mergeProps(buttonProps, hoverProps, focusProps)}
-      className={classNames('relative inline-flex items-center justify-center', className)}
+      ref={mergeRefs(ref, forwardedRef)}
+      className={buttonClassVariant({ color, className })}
       data-pressed={isPressed || undefined}
       data-hovered={isHovered || undefined}
       data-focused={isFocused || undefined}
@@ -36,5 +39,6 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>((props, forward
 });
 
 // Required by eslint rule (react/display-name).
+// https://github.com/jsx-eslint/eslint-plugin-react/blob/master/docs/rules/display-name.md
 // The button component was missing display name because it's an anonymous function `(props, ref) => ...`.
 Button.displayName = 'Button';

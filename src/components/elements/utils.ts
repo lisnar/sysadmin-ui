@@ -1,7 +1,9 @@
 import type { ForwardedRef, RefCallback } from 'react';
 
-// Merge multiple refs into one. Works with callback and object refs.
-// https://mayursinhsarvaiya.medium.com/how-to-merge-refs-in-react-component-d5e4623b6924
+/**
+ * Merge multiple refs into one. Works with callback and object refs.
+ * https://mayursinhsarvaiya.medium.com/how-to-merge-refs-in-react-component-d5e4623b6924
+ */
 export function mergeRefs<T = unknown>(...refs: ForwardedRef<T>[]): RefCallback<T> {
   return function (node: T) {
     for (const ref of refs) {
@@ -13,7 +15,9 @@ export function mergeRefs<T = unknown>(...refs: ForwardedRef<T>[]): RefCallback<
   };
 }
 
-// Join className strings conditionally.
+/**
+ * Join className strings conditionally.
+ */
 export function classNames(...classNames: (string | boolean | undefined)[]): string {
   return classNames.filter(Boolean).join(' ');
 }

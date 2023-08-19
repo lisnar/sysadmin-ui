@@ -1,10 +1,10 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import { Meta, StoryObj } from '@storybook/react';
 import { Button } from './button.tsx';
-import { buttonClassVariant } from './style.ts';
 
 const meta: Meta<typeof Button> = {
   title: 'Components/Elements/Button',
   component: Button,
+  tags: ['autodocs'],
   args: {
     children: 'Button',
     isDisabled: false,
@@ -20,24 +20,24 @@ type Story = StoryObj<typeof meta>;
 
 export const Primary: Story = {
   args: {
-    className: buttonClassVariant({ color: 'primary' }),
+    color: 'primary',
   },
 };
 
 export const Secondary: Story = {
   args: {
-    className: buttonClassVariant({ color: 'secondary' }),
+    color: 'secondary',
   },
 };
 
 export const Plain: Story = {
   args: {
-    className: buttonClassVariant({ color: 'plain' }),
+    color: 'plain',
   },
 };
 
 export const Danger: Story = {
   args: {
-    className: buttonClassVariant({ color: 'danger' }),
+    color: 'danger',
   },
 };
