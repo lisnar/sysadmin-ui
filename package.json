@@ -16,7 +16,9 @@
     "prepare": "husky install"
   },
   "dependencies": {
+    "class-variance-authority": "^0.7.0",
     "react": "^18.2.0",
+    "react-aria": "^3.27.0",
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
@@ -46,6 +48,7 @@
     "eslint-plugin-react-refresh": "^0.4.3",
     "eslint-plugin-storybook": "^0.6.13",
     "husky": "^8.0.3",
+    "json5": "^2.2.3",
     "lint-staged": "^13.2.3",
     "postcss": "^8.4.27",
     "prettier": "^3.0.1",

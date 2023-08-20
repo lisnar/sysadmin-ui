@@ -25,7 +25,7 @@
     IMPORTANT: `vite.config.ts` should also be configured to resolve absolute paths. */
     "baseUrl": ".",
     "paths": {
-      "~/*": ["src/*"]
+      // "~/*": ["src/*"]
     }
   },
   "include": ["src"],
