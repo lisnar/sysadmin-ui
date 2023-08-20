@@ -97,6 +97,9 @@ devDependencies:
   husky:
     specifier: ^8.0.3
     version: 8.0.3
+  json5:
+    specifier: ^2.2.3
+    version: 2.2.3
   lint-staged:
     specifier: ^13.2.3
     version: 13.2.3
