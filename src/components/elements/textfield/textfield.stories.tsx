@@ -7,7 +7,7 @@ const meta: Meta<typeof TextField> = {
   tags: ['autodocs'],
   args: {
     label: 'Email',
-    placeholder: 'lorem.ipsum@dolor.sit',
+    placeholder: 'e.g. lorem.ipsum@dolor.sit',
     description: '',
     errorMessage: '',
     isDisabled: false,
@@ -22,7 +22,7 @@ type Story = StoryObj<typeof meta>;
 
 export const WithHelperText: Story = {
   args: {
-    description: 'This is a helper text',
+    description: 'This is an optional helper text',
   },
 };
 
