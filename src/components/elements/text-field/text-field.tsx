@@ -1,7 +1,7 @@
 import { forwardRef, useRef } from 'react';
 import { AriaTextFieldProps, mergeProps, useFocusRing, useTextField } from 'react-aria';
 import { BsExclamationCircleFill } from 'react-icons/bs';
-import { classNames, mergeRefs } from '../utils';
+import { classNames, mergeRefs } from '../utils.ts';
 
 export const TextField = forwardRef<HTMLInputElement, AriaTextFieldProps>((props, forwardedRef) => {
   const { label, description, errorMessage, isDisabled = false } = props;
@@ -23,14 +23,13 @@ export const TextField = forwardRef<HTMLInputElement, AriaTextFieldProps>((props
         {...mergeProps(inputProps, focusProps)}
         ref={mergeRefs(ref, forwardedRef)}
         className={classNames(
-          'rounded-md px-3 py-2 text-sm',
+          'rounded-md px-3 py-2 text-sm shadow-sm transition',
           'border-gray-300 bg-white placeholder-gray-400', // base color
-          'ring-indigo-600 data-[focused]:border-indigo-600', // focus ring
-          'data-[invalid]:border-red-600 data-[invalid]:ring-red-600', // error state
-          'data-[disabled]:border-gray-300 data-[disabled]:bg-gray-50 ', // disabled state
+          'data-[focused]:border-indigo-600 data-[focused]:ring-indigo-600', // focus ring
+          'data-[invalid]:border-red-600 data-[focused]:data-[invalid]:ring-red-600', // invalid state
+          'disabled:bg-gray-50', // disabled state
         )}
         data-focused={isFocused || undefined}
-        data-disabled={isDisabled || undefined}
         data-invalid={isInvalid || undefined}
       />
       {isInvalid && (
