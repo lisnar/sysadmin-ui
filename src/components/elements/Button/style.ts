@@ -8,7 +8,7 @@ import { NonNullProps } from '../types.ts';
 // Enable IntelliSense: https://cva.style/docs/getting-started/installation#intellisense
 export const buttonClassVariant = cva(
   [
-    'relative inline-flex items-center justify-center transition', // behavior
+    'relative inline-flex items-center justify-center transition duration-100', // behavior
     'rounded-md border px-3 py-2 shadow', // appearance
     'outline-none ring-indigo-500 ring-offset-2', // outline
     'text-sm font-medium leading-4 tracking-tight', // content
