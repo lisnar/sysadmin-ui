@@ -17,10 +17,9 @@ function getTscFlags() {
   return Object.entries(tsconfig.compilerOptions)
     .filter(([key, value]) => !!value && key !== 'paths') // `paths` are not supported in cli
     .map(([key, value]) => {
-      if (Array.isArray(value)) return `${key} ${value.join(',')}`;
-      if (typeof value === 'string') return `${key} ${value}`;
-      return key;
+      if (Array.isArray(value)) return `--${key} ${value.join(',')}`;
+      if (typeof value === 'string') return `--${key} ${value}`;
+      return `--${key}`;
     })
-    .map((key) => `--${key}`)
     .join(' ');
 }

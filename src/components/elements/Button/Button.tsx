@@ -1,6 +1,6 @@
 import { forwardRef, useRef } from 'react';
 import { AriaButtonProps, mergeProps, useButton, useFocusRing, useHover } from 'react-aria';
-import { Spinner } from '../spinner';
+import { Spinner } from '../Spinner';
 import { classNames, mergeRefs } from '../utils.ts';
 import { ButtonVariantProps, buttonClassVariant } from './style.ts';
 
