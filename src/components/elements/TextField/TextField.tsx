@@ -8,7 +8,7 @@ export const TextField = forwardRef<HTMLInputElement, AriaTextFieldProps>((props
   const ref = useRef<HTMLInputElement>(null);
 
   const { labelProps, inputProps, descriptionProps, errorMessageProps } = useTextField(props, ref);
-  const { focusProps, isFocused } = useFocusRing(props);
+  const { focusProps } = useFocusRing(props);
   const isInvalid = !!errorMessage && !isDisabled;
 
   return (
@@ -23,19 +23,18 @@ export const TextField = forwardRef<HTMLInputElement, AriaTextFieldProps>((props
         {...mergeProps(inputProps, focusProps)}
         ref={mergeRefs(ref, forwardedRef)}
         className={classNames(
-          'rounded-md px-3 py-2 text-sm shadow-sm transition duration-100',
+          'rounded-md px-3 py-2 text-sm shadow-sm transition duration-75',
           'border-gray-300 bg-white placeholder-gray-400', // base color
-          'data-[focused]:border-indigo-600 data-[focused]:ring-4 data-[focused]:ring-indigo-200', // focus ring
-          'data-[invalid]:border-red-600 data-[focused]:data-[invalid]:ring-red-200', // invalid state
+          'focus:border-indigo-600 focus:ring-4 focus:ring-indigo-200', // focus ring
+          'data-[invalid]:border-red-600 focus:data-[invalid]:ring-red-200', // invalid state
           'disabled:bg-gray-50', // disabled state
         )}
-        data-focused={isFocused || undefined}
         data-invalid={isInvalid || undefined}
       />
       {isInvalid && (
         <small
           {...errorMessageProps}
-          className="relative ml-3 mt-1 flex items-center text-xs text-red-600"
+          className="relative ml-3 mt-1 inline-flex items-center text-xs text-red-600"
         >
           <BsExclamationCircleFill
             className="pointer-events-none mr-1 h-3 w-3"
