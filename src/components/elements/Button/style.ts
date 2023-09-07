@@ -6,7 +6,7 @@ import { NonNullProps } from '../types.ts';
 
 // Enable class sorting: add "cva" to `tailwindFunctions` in `.prettierrc`.
 // Enable IntelliSense: https://cva.style/docs/getting-started/installation#intellisense
-export const buttonClassVariant = cva(
+export const buttonVariant = cva(
   [
     'relative inline-flex items-center justify-center transition duration-75', // behavior
     'rounded-md border px-3 py-2 shadow-sm', // appearance
@@ -17,23 +17,23 @@ export const buttonClassVariant = cva(
   ],
   {
     variants: {
-      color: {
+      intent: {
+        // primary: [
+        //   'border-transparent bg-indigo-600 text-white',
+        //   'enabled:data-[hovered]:bg-indigo-700',
+        //   'disabled:bg-indigo-600/50',
+        // ],
         primary: [
-          'border-transparent bg-indigo-600 text-white',
-          'enabled:data-[hovered]:bg-indigo-700',
-          'disabled:bg-indigo-600/50',
-        ],
-        secondary: [
           'border-transparent bg-indigo-100 text-indigo-700',
           'enabled:data-[hovered]:bg-indigo-200',
           'disabled:bg-indigo-100/50 disabled:text-indigo-700/50',
         ],
-        plain: [
+        neutral: [
           'border-gray-300 bg-white text-gray-700',
           'enabled:data-[hovered]:bg-gray-50',
           'disabled:border-gray-300/50 disabled:text-gray-700/50',
         ],
-        danger: [
+        destructive: [
           'border-transparent bg-red-600 text-white ring-red-500',
           'enabled:data-[hovered]:bg-red-700',
           'disabled:bg-red-600/50',
@@ -41,11 +41,11 @@ export const buttonClassVariant = cva(
       },
     },
     defaultVariants: {
-      color: 'primary',
+      intent: 'neutral',
     },
   },
 );
 
 // `VariantProps` includes `null` option which ignore all variant classes, including the default variant.
 // This `null` option is removed by `NonNullProps`.
-export type ButtonVariantProps = NonNullProps<VariantProps<typeof buttonClassVariant>>;
+export type ButtonVariantProps = NonNullProps<VariantProps<typeof buttonVariant>>;

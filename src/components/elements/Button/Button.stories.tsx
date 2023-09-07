@@ -20,24 +20,18 @@ type Story = StoryObj<typeof meta>;
 
 export const Primary: Story = {
   args: {
-    color: 'primary',
+    intent: 'primary',
   },
 };
 
-export const Secondary: Story = {
+export const Neutral: Story = {
   args: {
-    color: 'secondary',
+    intent: 'neutral',
   },
 };
 
-export const Plain: Story = {
+export const Destructive: Story = {
   args: {
-    color: 'plain',
-  },
-};
-
-export const Danger: Story = {
-  args: {
-    color: 'danger',
+    intent: 'destructive',
   },
 };
