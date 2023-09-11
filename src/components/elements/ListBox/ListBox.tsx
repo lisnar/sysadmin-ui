@@ -2,96 +2,125 @@ import { useRef } from 'react';
 import {
   AriaListBoxProps,
   mergeProps,
-  useFocusRing,
+  useHover,
   useListBox,
   useListBoxSection,
   useOption,
 } from 'react-aria';
 import { ListState, Node, useListState } from 'react-stately';
+import { CheckIcon } from '../../icons/CheckIcon.tsx';
+import { classNames } from '../utils.ts';
 
 export function ListBox<T extends object>(props: AriaListBoxProps<T>) {
   const state = useListState(props);
-
   const ref = useRef(null);
+
   const { listBoxProps, labelProps } = useListBox(props, state, ref);
 
   return (
-    <>
-      <div {...labelProps}>{props.label}</div>
+    <div className="w-60">
+      <div {...labelProps} className="text-sm font-medium text-gray-700">
+        {props.label}
+      </div>
       <ul
         {...listBoxProps}
         ref={ref}
-        style={{
-          padding: 0,
-          margin: '5px 0',
-          listStyle: 'none',
-          border: '1px solid gray',
-          maxWidth: 250,
-          maxHeight: 300,
-          overflow: 'auto',
-        }}
-      >
-        {[...state.collection].map((item) =>
-          item.type === 'section' ? (
-            <ListBoxSection key={item.key} section={item} state={state} />
-          ) : (
-            <ListBoxOption key={item.key} item={item} state={state} />
-          ),
+        className={classNames(
+          'overflow-auto', // behavior
+          'mt-1 w-full rounded-md bg-white py-1 text-sm shadow-lg', // appearance
+          'ring-1 ring-black ring-opacity-5 focus:outline-none', // outline
         )}
+      >
+        {[...state.collection].map((item) => {
+          const ListBoxItem = item.type === 'section' ? ListBoxSection : ListBoxOption;
+          return <ListBoxItem key={item.key} item={item} state={state} />;
+        })}
       </ul>
-    </>
+    </div>
   );
 }
 
-interface ListBoxOptionProps<T> {
+interface ListBoxItemProps<T> {
   item: Node<T>;
   state: ListState<T>;
 }
 
-function ListBoxOption<T extends object>({ item, state }: ListBoxOptionProps<T>) {
-  // Get props for the option element
+function ListBoxOption<T extends object>(props: ListBoxItemProps<T>) {
+  const { item, state } = props;
   const ref = useRef(null);
-  const { optionProps, isSelected, isDisabled } = useOption({ key: item.key }, state, ref);
 
-  // Determine whether we should show a keyboard
-  // focus ring for accessibility
-  const { focusProps, isFocusVisible } = useFocusRing();
+  const { optionProps, descriptionProps, isSelected, isFocused, isFocusVisible, isDisabled } =
+    useOption(item, state, ref);
+  const { hoverProps, isHovered } = useHover({
+    isDisabled: state.selectionManager.isDisabled(item.key),
+    onHoverStart() {
+      // Use this because `shouldFocusOnHover` in `useOption` is deprecated.
+      if (!isFocusVisible) {
+        // state.selectionManager.setFocused(true);
+        state.selectionManager.setFocusedKey(item.key);
+      }
+    },
+  });
 
   return (
     <li
-      {...mergeProps(optionProps, focusProps)}
+      {...mergeProps(optionProps, hoverProps)}
       ref={ref}
-      style={{
-        background: isSelected ? 'blueviolet' : 'transparent',
-        color: isDisabled ? '#aaa' : isSelected ? 'white' : undefined,
-        padding: '2px 5px',
-        outline: isFocusVisible ? '2px solid orange' : 'none',
-      }}
+      className={classNames(
+        'relative cursor-default select-none', // behavior
+        'py-2 pl-3 pr-9', // appearance
+        'outline-none focus:bg-indigo-600 focus:text-white', // focused state
+        'data-[disabled]:bg-gray-100', // disabled state
+      )}
+      data-selected={isSelected || undefined}
+      data-hovered={isHovered || undefined}
+      data-disabled={isDisabled || undefined}
     >
-      {item.rendered}
+      <div className="flex">
+        <span
+          className="truncate font-normal text-gray-900 data-[selected]:font-bold data-[disabled]:text-gray-400 data-[focused]:text-white"
+          data-selected={isSelected || undefined}
+          data-focused={isFocused || undefined}
+          data-disabled={isDisabled || undefined}
+        >
+          {item.rendered}
+        </span>
+        <span
+          {...descriptionProps}
+          className="ml-2 truncate text-gray-500 data-[disabled]:text-gray-400 data-[focused]:text-indigo-200"
+          data-focused={isFocused || undefined}
+          data-disabled={isDisabled || undefined}
+        >
+          @{item.type}
+        </span>
+      </div>
+      {isSelected && (
+        <div
+          className="absolute inset-y-0 right-0 flex items-center pr-4 text-indigo-600 data-[focused]:text-white"
+          data-focused={isFocused || undefined}
+        >
+          <CheckIcon className="h-5 w-5" aria-hidden="true" />
+        </div>
+      )}
     </li>
   );
 }
 
-interface ListBoxSectionProps<T> {
-  section: Node<T>;
-  state: ListState<T>;
-}
-
-function ListBoxSection<T extends object>({ section, state }: ListBoxSectionProps<T>) {
+function ListBoxSection<T extends object>({ item, state }: ListBoxItemProps<T>) {
   const { itemProps, headingProps, groupProps } = useListBoxSection({
-    'heading': section.rendered,
-    'aria-label': section['aria-label'],
+    'heading': item.rendered,
+    'aria-label': item['aria-label'],
   });
 
-  const childNodes = state.collection.getChildren?.(section.key) ?? [];
+  // Get the child items for the section. (`item.childNodes` is deprecated)
+  const childNodes = state.collection.getChildren?.(item.key) ?? [];
 
   // If the section is not the first, add a separator element to provide visual separation.
   // The heading is rendered inside an <li> element, which contains
   // a <ul> with the child items.
   return (
     <>
-      {section.key !== state.collection.getFirstKey() && (
+      {item.key !== state.collection.getFirstKey() && (
         <li
           role="presentation"
           style={{
@@ -101,7 +130,7 @@ function ListBoxSection<T extends object>({ section, state }: ListBoxSectionProp
         />
       )}
       <li {...itemProps}>
-        {section.rendered && (
+        {item.rendered && (
           <span
             {...headingProps}
             style={{
@@ -110,7 +139,7 @@ function ListBoxSection<T extends object>({ section, state }: ListBoxSectionProp
               padding: '2px 5px',
             }}
           >
-            {section.rendered}
+            {item.rendered}
           </span>
         )}
         <ul
