@@ -1,5 +1,6 @@
 import { Meta, StoryObj } from '@storybook/react';
-import { Item, Section, useListData } from 'react-stately';
+import { Key } from 'react';
+import { Item, Section, useListData, useTreeData } from 'react-stately';
 import { ListBox } from './ListBox.tsx';
 
 const meta: Meta<typeof ListBox> = {
@@ -89,6 +90,57 @@ function ControlledListBox() {
   );
 }
 
-export const Controlled: Story = {
+export const ControlledList: Story = {
   render: ControlledListBox,
+};
+
+// TODO: `Item` if no children, `Section` if have children. Or add "Uncategorized" section.
+function ControlledListBoxWithTreeData() {
+  const tree = useTreeData<Item>({
+    initialItems: [
+      {
+        id: 1,
+        name: 'People',
+        items: [
+          { id: 11, name: 'David' },
+          { id: 12, name: 'Sam' },
+          { id: 13, name: 'Jane' },
+        ],
+      },
+      {
+        id: 2,
+        name: 'Animals',
+        items: [
+          { id: 21, name: 'Aardvark' },
+          { id: 22, name: 'Kangaroo' },
+          { id: 23, name: 'Snake' },
+        ],
+      },
+    ],
+    initialSelectedKeys: ['12', '22'],
+    getKey: (item) => item.id,
+    getChildren: (item) => item.items ?? [],
+  });
+
+  return (
+    <ListBox
+      label="People and Animals" // if label is not provided, `aria-label` must be used
+      items={tree.items}
+      selectionMode="multiple"
+      selectedKeys={tree.selectedKeys}
+      disabledKeys={[4]}
+      // Using arrow function to suppress `@typescript-eslint/unbound-method` error.
+      onSelectionChange={(keys) => tree.setSelectedKeys(keys as Set<Key>)}
+    >
+      {(node) => (
+        <Section key={node.key} title={node.value.name} items={node.children}>
+          {(node) => <Item key={node.key}>{node.value.name}</Item>}
+        </Section>
+      )}
+    </ListBox>
+  );
+}
+
+export const ControlledTree: Story = {
+  render: ControlledListBoxWithTreeData,
 };
