@@ -2,11 +2,11 @@
 // https://youtu.be/T-Zv73yZ_QI
 
 import { cva, VariantProps } from 'class-variance-authority';
-import { NonNullProps } from '../types.ts';
+import { NonNullProps } from '../../types.ts';
 
 // Enable class sorting: add "cva" to `tailwindFunctions` in `.prettierrc`.
 // Enable IntelliSense: https://cva.style/docs/getting-started/installation#intellisense
-export const buttonVariant = cva(
+export const buttonClassVariants = cva(
   [
     'relative inline-flex items-center justify-center transition duration-75', // behavior
     'rounded-md border px-3 py-2 shadow-sm', // appearance
@@ -48,4 +48,4 @@ export const buttonVariant = cva(
 
 // `VariantProps` includes `null` option which ignore all variant classes, including the default variant.
 // This `null` option is removed by `NonNullProps`.
-export type ButtonVariantProps = NonNullProps<VariantProps<typeof buttonVariant>>;
+export type ButtonVariantProps = NonNullProps<VariantProps<typeof buttonClassVariants>>;

@@ -1,6 +1,6 @@
 import { forwardRef, useRef } from 'react';
 import { AriaTextFieldProps, mergeProps, useFocusRing, useTextField } from 'react-aria';
-import { MdError } from 'react-icons/md';
+import { ErrorIcon } from '../../icons';
 import { mergeRefs } from '../utils.ts';
 import { fieldContainerStyle, fieldHelperTextVariant, inputStyle, labelStyle } from './style.ts';
 
@@ -26,7 +26,7 @@ export const TextField = forwardRef<HTMLInputElement, AriaTextFieldProps>((props
       />
       {isInvalid && (
         <small {...errorMessageProps} className={fieldHelperTextVariant({ intent: 'error' })}>
-          <MdError className="mr-0.5 h-4 w-4" aria-hidden="true" />
+          <ErrorIcon size="xs" className="-ml-px mr-0.5" aria-hidden="true" />
           {errorMessage}
         </small>
       )}

@@ -1,5 +1,5 @@
 import { cva, VariantProps } from 'class-variance-authority';
-import { NonNullProps } from '../types.ts';
+import { NonNullProps } from '../../types.ts';
 import { classNames } from '../utils.ts';
 
 export const fieldContainerStyle = 'relative flex w-64 flex-col text-gray-900';

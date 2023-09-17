@@ -1,12 +1,17 @@
-export interface SpinnerProps {
-  className?: string;
-}
+import { twMerge } from 'tailwind-merge';
+import { iconClassVariants } from '../style.ts';
+import { IconProps } from '../types.ts';
 
-export function Spinner({ className }: SpinnerProps) {
+export function Spinner({ className, size, ...props }: IconProps) {
   return (
     <>
       {/* SVG taken from https://github.com/n3r4zzurr0/svg-spinners */}
-      <svg className={className} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+      <svg
+        {...props}
+        className={twMerge(iconClassVariants({ size, className }))}
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+      >
         <path
           className="origin-center opacity-25"
           fill="currentColor"

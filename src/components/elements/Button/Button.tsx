@@ -1,8 +1,9 @@
 import { forwardRef, useRef } from 'react';
 import { AriaButtonProps, mergeProps, useButton, useFocusRing, useHover } from 'react-aria';
-import { Spinner } from '../Spinner';
+import { twMerge } from 'tailwind-merge';
+import { Spinner } from '../../icons';
 import { classNames, mergeRefs } from '../utils.ts';
-import { ButtonVariantProps, buttonVariant } from './style.ts';
+import { ButtonVariantProps, buttonClassVariants } from './style.ts';
 
 // Use `interface` here because it will generate error when extended types have conflicting properties.
 // If `type` is used, conflicting properties will quietly overwrite each other.
@@ -26,12 +27,12 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>((props, forward
     <button
       {...mergeProps(buttonProps, hoverProps, focusProps)}
       ref={mergeRefs(ref, forwardedRef)}
-      className={buttonVariant({ intent, className })}
+      className={twMerge(buttonClassVariants({ intent, className }))}
       data-pressed={isPressed || undefined}
       data-hovered={isHovered || undefined}
       data-focus-visible={isFocusVisible || undefined}
     >
-      {isLoading && <Spinner className="absolute h-5 w-5" />}
+      {isLoading && <Spinner size="sm" className="absolute" />}
       <span className={classNames('transition', isLoading && 'opacity-0')}>{children}</span>
     </button>
   );

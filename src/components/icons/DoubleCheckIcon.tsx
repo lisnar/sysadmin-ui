@@ -2,7 +2,7 @@ import { twMerge } from 'tailwind-merge';
 import { iconClassVariants } from './style.ts';
 import { IconProps } from './types.ts';
 
-export function CheckIcon({ className, size, ...props }: IconProps) {
+export function DoubleCheckIcon({ className, size, ...props }: IconProps) {
   return (
     // SVG taken from https://www.tailwindtap.com/resources/icons
     <svg
@@ -19,7 +19,8 @@ export function CheckIcon({ className, size, ...props }: IconProps) {
       strokeLinejoin="round"
     >
       <path stroke="none" d="M0 0h24v24H0z" />
-      <path d="M5 12l5 5l10 -10" />
+      <path d="M7 12l5 5l10 -10" />
+      <path d="M2 12l5 5m5 -5l5 -5" />
     </svg>
   );
 }

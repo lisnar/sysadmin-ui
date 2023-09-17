@@ -1,7 +1,7 @@
 import { useRef } from 'react';
 import { AriaListBoxProps, useListBox, useListBoxSection, useOption } from 'react-aria';
 import { ListState, Node, useListState } from 'react-stately';
-import { CheckIcon } from '../../icons/CheckIcon.tsx';
+import { CheckIcon } from '../../icons';
 import {
   listBoxLabelStyle,
   listBoxOptionContainerStyle,
@@ -74,7 +74,8 @@ function ListBoxOption<T extends object>({ item, state }: ListBoxItemProps<T>) {
       {/* TODO: create `SelectedMark` component, pass icon and className as props. Add data-focused and data-focus-visible. */}
       {isSelected && (
         <CheckIcon
-          className="absolute right-3 top-1/2 h-5 w-5 -translate-y-1/2"
+          size="sm"
+          className="absolute right-3 top-1/2 -translate-y-1/2"
           aria-hidden="true"
         />
       )}
@@ -87,8 +88,6 @@ function ListBoxSection<T extends object>({ item, state }: ListBoxItemProps<T>) 
     'heading': item.rendered,
     'aria-label': item['aria-label'],
   });
-
-  // item.rendered[0].props.role = 'presentation';
 
   // If the section is not the first, add a separator element to provide visual separation.
   // The heading is rendered inside an <li> element, which contains

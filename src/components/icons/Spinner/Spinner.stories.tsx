@@ -2,7 +2,7 @@ import { Meta, StoryObj } from '@storybook/react';
 import { Spinner } from './Spinner.tsx';
 
 const meta: Meta<typeof Spinner> = {
-  title: 'Components/Elements/Spinner',
+  title: 'Components/Icons/Spinner',
   component: Spinner,
 };
 
@@ -11,6 +11,6 @@ type Story = StoryObj<typeof meta>;
 
 export const Example: Story = {
   args: {
-    className: 'h-10 w-10',
+    size: 'md',
   },
 };
