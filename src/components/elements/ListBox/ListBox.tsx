@@ -2,32 +2,36 @@ import { useRef } from 'react';
 import { AriaListBoxProps, useListBox, useListBoxSection, useOption } from 'react-aria';
 import { ListState, Node, useListState } from 'react-stately';
 import { CheckIcon } from '../../icons/CheckIcon.tsx';
-import { classNames } from '../utils.ts';
+import {
+  listBoxLabelStyle,
+  listBoxOptionContainerStyle,
+  listBoxOptionDescriptionStyle,
+  listBoxOptionItemStyle,
+  listBoxSectionHeadingStyle,
+  listBoxSectionSeparatorStyle,
+  listBoxULStyle,
+} from './style.ts';
 
 export function ListBox<T extends object>(props: AriaListBoxProps<T>) {
   const state = useListState(props);
   const ref = useRef(null);
 
   const { listBoxProps, labelProps } = useListBox(
-    { ...props, shouldFocusOnHover: true },
+    {
+      ...props,
+      shouldFocusOnHover: true,
+      shouldFocusWrap: true,
+    },
     state,
     ref,
   );
 
   return (
     <div className="w-60">
-      <div {...labelProps} className="text-sm font-medium text-gray-700">
+      <div {...labelProps} className={listBoxLabelStyle}>
         {props.label}
       </div>
-      <ul
-        {...listBoxProps}
-        ref={ref}
-        className={classNames(
-          'overflow-auto', // behavior
-          'mt-1 w-full rounded-md bg-white py-1 text-sm shadow-lg', // appearance
-          'ring-1 ring-black ring-opacity-5 focus:outline-none', // outline
-        )}
-      >
+      <ul {...listBoxProps} ref={ref} className={listBoxULStyle}>
         {[...state.collection].map((item) => {
           const ListBoxItem = item.type === 'section' ? ListBoxSection : ListBoxOption;
           return <ListBoxItem key={item.key} item={item} state={state} />;
@@ -42,39 +46,37 @@ interface ListBoxItemProps<T> {
   state: ListState<T>;
 }
 
-function ListBoxOption<T extends object>(props: ListBoxItemProps<T>) {
-  const { item, state } = props;
+function ListBoxOption<T extends object>({ item, state }: ListBoxItemProps<T>) {
   const ref = useRef(null);
 
-  const { optionProps, descriptionProps, isSelected, isDisabled } = useOption(item, state, ref);
+  const { optionProps, descriptionProps, isSelected, isDisabled } = useOption(
+    {
+      'key': item.key,
+      'aria-label': item['aria-label'],
+    },
+    state,
+    ref,
+  );
 
   return (
     <li
       {...optionProps}
       ref={ref}
-      className={classNames(
-        'group relative cursor-default select-none', // behavior
-        'py-2 pl-3 pr-9', // appearance
-        'outline-none focus:bg-indigo-600 focus:text-white', // focused state
-        'data-[disabled]:pointer-events-none data-[disabled]:bg-gray-100', // disabled state
-      )}
+      className={listBoxOptionContainerStyle}
       data-selected={isSelected || undefined}
       data-disabled={isDisabled || undefined}
     >
-      <span className="truncate font-normal text-gray-900 group-focus:text-white group-data-[selected]:font-bold group-data-[disabled]:text-gray-400">
-        {item.rendered}
-      </span>
+      <span className={listBoxOptionItemStyle}>{item.rendered}</span>
       {/* TODO: use context to get descriptionProps and pass component from `item.rendered` */}
-      <span
-        {...descriptionProps}
-        className="ml-2 truncate text-gray-500 group-focus:text-indigo-200 group-data-[disabled]:text-gray-400"
-      >
+      <span {...descriptionProps} className={listBoxOptionDescriptionStyle}>
         @{item.type}
       </span>
+      {/* TODO: create `SelectedMark` component, pass icon and className as props. Add data-focused and data-focus-visible. */}
       {isSelected && (
-        <div className="absolute inset-y-0 right-0 flex items-center pr-4 text-indigo-600 group-focus:text-white">
-          <CheckIcon className="h-5 w-5" aria-hidden="true" />
-        </div>
+        <CheckIcon
+          className="absolute right-3 top-1/2 h-5 w-5 -translate-y-1/2"
+          aria-hidden="true"
+        />
       )}
     </li>
   );
@@ -86,44 +88,25 @@ function ListBoxSection<T extends object>({ item, state }: ListBoxItemProps<T>) 
     'aria-label': item['aria-label'],
   });
 
-  // Get the child items for the section. (`item.childNodes` is deprecated)
-  const childNodes = state.collection.getChildren!(item.key);
+  // item.rendered[0].props.role = 'presentation';
 
   // If the section is not the first, add a separator element to provide visual separation.
   // The heading is rendered inside an <li> element, which contains
   // a <ul> with the child items.
   return (
     <>
+      {/* TODO: this can be separated from Section as optional SectionSeparator component */}
       {item.key !== state.collection.getFirstKey() && (
-        <li
-          role="presentation"
-          style={{
-            borderTop: '1px solid gray',
-            margin: '2px 5px',
-          }}
-        />
+        <li role="presentation" className={listBoxSectionSeparatorStyle} />
       )}
       <li {...itemProps}>
         {item.rendered && (
-          <span
-            {...headingProps}
-            style={{
-              fontWeight: 'bold',
-              fontSize: '1.1em',
-              padding: '2px 5px',
-            }}
-          >
-            {item.rendered}
-          </span>
+          <div className={listBoxSectionHeadingStyle}>
+            <span {...headingProps}>{item.rendered}</span>
+          </div>
         )}
-        <ul
-          {...groupProps}
-          style={{
-            padding: 0,
-            listStyle: 'none',
-          }}
-        >
-          {[...childNodes].map((node) => (
+        <ul {...groupProps}>
+          {[...state.collection.getChildren!(item.key)].map((node) => (
             <ListBoxOption key={node.key} item={node} state={state} />
           ))}
         </ul>
