@@ -10,9 +10,9 @@ export interface ButtonProps extends HeadlessButtonProps, ButtonVariantProps {
   isLoading?: boolean;
 }
 
-export function Button({ children, className, intent, isLoading }: ButtonProps) {
+export function Button({ children, className, intent, isLoading, ...props }: ButtonProps) {
   return (
-    <HeadlessButton className={twMerge(buttonClassVariants({ intent, className }))}>
+    <HeadlessButton {...props} className={twMerge(buttonClassVariants({ intent, className }))}>
       {isLoading && <Spinner size="sm" className="absolute" />}
       <span className={classNames('transition', isLoading && 'opacity-0')}>{children}</span>
     </HeadlessButton>
