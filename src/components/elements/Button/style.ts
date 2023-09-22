@@ -1,6 +1,3 @@
-// 13-min video: Design system with Tailwind
-// https://youtu.be/T-Zv73yZ_QI
-
 import { cva, VariantProps } from 'class-variance-authority';
 import { NonNullProps } from '../../types.ts';
 
