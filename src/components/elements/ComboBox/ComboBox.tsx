@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { AriaComboBoxProps, useComboBox, useFilter } from 'react-aria';
 import { useComboBoxState } from 'react-stately';
 import { ChevronDownIcon } from '../../icons';
@@ -8,23 +8,25 @@ import { Popover } from './Popover';
 
 // ComboBox example from React Aria docs.
 export function ComboBox<T extends object>(props: AriaComboBoxProps<T>) {
-  // eslint-disable-next-line @typescript-eslint/unbound-method
-  const { contains } = useFilter({ sensitivity: 'base' });
-  const state = useComboBoxState({ ...props, defaultFilter: contains });
+  const { contains } = useFilter({ sensitivity: 'base' }); // eslint-disable-line @typescript-eslint/unbound-method
+  const state = useComboBoxState({ ...props, defaultFilter: contains, menuTrigger: 'focus' });
+  const { isOpen, collection, selectedKey, selectionManager } = state;
 
-  const buttonRef = useRef(null);
-  const inputRef = useRef(null);
-  const listBoxRef = useRef(null);
-  const popoverRef = useRef(null);
+  // When ListBox is opened or updated, set focus to selected item (if available) or first item.
+  useEffect(() => {
+    if (isOpen && collection.size > 0) {
+      const focusedKey = collection.getItem(selectedKey) ? selectedKey : collection.getFirstKey();
+      selectionManager.setFocusedKey(focusedKey);
+    }
+  }, [isOpen, collection]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const listBoxRef = useRef<HTMLUListElement>(null);
+  const popoverRef = useRef<HTMLDivElement>(null);
 
   const { buttonProps, inputProps, listBoxProps, labelProps } = useComboBox(
-    {
-      ...props,
-      inputRef,
-      buttonRef,
-      listBoxRef,
-      popoverRef,
-    },
+    { ...props, inputRef, buttonRef, listBoxRef, popoverRef },
     state,
   );
 

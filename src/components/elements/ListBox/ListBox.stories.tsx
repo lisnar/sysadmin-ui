@@ -1,5 +1,4 @@
 import { Meta, StoryObj } from '@storybook/react';
-import { Key } from 'react';
 import { Item, Section, useListData, useTreeData } from 'react-stately';
 import { ListBox } from './ListBox.tsx';
 
@@ -129,8 +128,7 @@ function ControlledListBoxWithTreeData() {
       selectionMode="multiple"
       selectedKeys={tree.selectedKeys}
       disabledKeys={[4]}
-      // Using arrow function to suppress `@typescript-eslint/unbound-method` error.
-      onSelectionChange={(keys) => tree.setSelectedKeys(keys as Set<Key>)}
+      onSelectionChange={(keys) => keys !== 'all' && tree.setSelectedKeys(keys)}
     >
       {(node) => (
         <Section key={node.key} title={node.value.name} items={node.children}>
