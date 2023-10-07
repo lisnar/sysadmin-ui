@@ -7,7 +7,7 @@ export interface HeadlessButtonProps extends AriaButtonProps {
 }
 
 export const HeadlessButton = forwardRef<HTMLButtonElement, HeadlessButtonProps>(
-  (props, forwardedRef) => {
+  ({ children, className, ...props }, forwardedRef) => {
     const ref = useRef<HTMLButtonElement>(null);
 
     const { buttonProps, isPressed } = useButton(props, ref);
@@ -17,13 +17,13 @@ export const HeadlessButton = forwardRef<HTMLButtonElement, HeadlessButtonProps>
     return (
       <button
         {...mergeProps(buttonProps, hoverProps, focusProps)}
-        className={props.className}
         ref={mergeRefs(ref, forwardedRef)}
+        className={className}
         data-pressed={isPressed || undefined}
         data-hovered={isHovered || undefined}
         data-focus-visible={isFocusVisible || undefined}
       >
-        {props.children}
+        {children}
       </button>
     );
   },
