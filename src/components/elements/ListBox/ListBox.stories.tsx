@@ -1,10 +1,10 @@
 import { Meta, StoryObj } from '@storybook/react';
 import { Item, Section, useListData, useTreeData } from 'react-stately';
-import { ListBox } from './ListBox.tsx';
+import { ListBoxOld } from './ListBoxOld.tsx';
 
-const meta: Meta<typeof ListBox> = {
+const meta: Meta<typeof ListBoxOld> = {
   title: 'Components/Elements/ListBox',
-  component: ListBox,
+  component: ListBoxOld,
   tags: ['autodocs'],
   args: {},
 };
@@ -14,7 +14,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Single: Story = {
   render: () => (
-    <ListBox label="Number" selectionMode="single">
+    <ListBoxOld label="Number" selectionMode="single">
       <Section title="Section 1">
         <Item key="1">One</Item>
         <Item key="2">Two</Item>
@@ -30,13 +30,13 @@ export const Single: Story = {
         <Item key="8">Eight</Item>
         <Item key="9">Nine</Item>
       </Section>
-    </ListBox>
+    </ListBoxOld>
   ),
 };
 
 export const Multiple: Story = {
   render: () => (
-    <ListBox label="Number" selectionMode="multiple">
+    <ListBoxOld label="Number" selectionMode="multiple">
       <Section title="Section 1">
         <Item key="1">One</Item>
         <Item key="2">Two</Item>
@@ -52,7 +52,7 @@ export const Multiple: Story = {
         <Item key="8">Eight</Item>
         <Item key="9">Nine</Item>
       </Section>
-    </ListBox>
+    </ListBoxOld>
   ),
 };
 
@@ -75,7 +75,7 @@ function ControlledListBox() {
   });
 
   return (
-    <ListBox
+    <ListBoxOld
       label="Animals" // if label is not provided, `aria-label` must be used
       items={list.items}
       selectionMode="single"
@@ -85,7 +85,7 @@ function ControlledListBox() {
       onSelectionChange={(keys) => list.setSelectedKeys(keys)}
     >
       {(item) => <Item>{item.name}</Item>}
-    </ListBox>
+    </ListBoxOld>
   );
 }
 
@@ -122,7 +122,7 @@ function ControlledListBoxWithTreeData() {
   });
 
   return (
-    <ListBox
+    <ListBoxOld
       label="People and Animals" // if label is not provided, `aria-label` must be used
       items={tree.items}
       selectionMode="multiple"
@@ -135,7 +135,7 @@ function ControlledListBoxWithTreeData() {
           {(node) => <Item key={node.key}>{node.value.name}</Item>}
         </Section>
       )}
-    </ListBox>
+    </ListBoxOld>
   );
 }
 

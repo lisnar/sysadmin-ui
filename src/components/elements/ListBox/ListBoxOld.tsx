@@ -12,7 +12,10 @@ import {
   listBoxULStyle,
 } from './style.ts';
 
-export function ListBox<T extends object>(props: AriaListBoxProps<T>) {
+/**
+ * @deprecated
+ */
+export function ListBoxOld<T extends object>(props: AriaListBoxProps<T>) {
   const state = useListState(props);
   const ref = useRef(null);
 
@@ -49,7 +52,7 @@ interface ListBoxItemProps<T> {
 function ListBoxOption<T extends object>({ item, state }: ListBoxItemProps<T>) {
   const ref = useRef(null);
 
-  const { optionProps, descriptionProps, isSelected, isDisabled } = useOption(
+  const { optionProps, labelProps, descriptionProps, isSelected, isDisabled } = useOption(
     {
       'key': item.key,
       'aria-label': item['aria-label'],
@@ -66,7 +69,9 @@ function ListBoxOption<T extends object>({ item, state }: ListBoxItemProps<T>) {
       data-selected={isSelected || undefined}
       data-disabled={isDisabled || undefined}
     >
-      <span className={listBoxOptionItemStyle}>{item.rendered}</span>
+      <span {...labelProps} className={listBoxOptionItemStyle}>
+        {item.rendered}
+      </span>
       {/* TODO: use context to get descriptionProps and pass component from `item.rendered` */}
       <span {...descriptionProps} className={listBoxOptionDescriptionStyle}>
         @{item.type}

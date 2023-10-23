@@ -4,14 +4,17 @@ import { ListState, Node } from 'react-stately';
 import { CheckIcon } from '../../icons';
 import { mergeRefs } from '../utils.ts';
 
-export interface HeadlessListBoxProps<T = unknown> extends AriaListBoxOptions<T> {
+interface HeadlessListBoxProps<T = unknown> extends AriaListBoxOptions<T> {
   state: ListState<T>;
   className?: string;
   // TODO: Add section & option here.
   // https://youtu.be/vPRdY87_SH0
 }
 
-export const HeadlessListBox = forwardRef<HTMLUListElement, HeadlessListBoxProps>(
+/**
+ * @deprecated
+ */
+export const HeadlessListBoxOld = forwardRef<HTMLUListElement, HeadlessListBoxProps>(
   ({ state, className, ...props }, forwardedRef) => {
     const ref = useRef<HTMLUListElement>(null);
     const { listBoxProps } = useListBox(props, state, ref);
@@ -33,7 +36,7 @@ export const HeadlessListBox = forwardRef<HTMLUListElement, HeadlessListBoxProps
 // Required by eslint rule (react/display-name).
 // https://github.com/jsx-eslint/eslint-plugin-react/blob/master/docs/rules/display-name.md
 // Display name was missing because the component is an anonymous function `(props, ref) => ...`.
-HeadlessListBox.displayName = 'HeadlessListBox';
+HeadlessListBoxOld.displayName = 'HeadlessListBoxOld';
 
 interface HeadlessListBoxChildrenProps<T = unknown> {
   item: Node<T>;
