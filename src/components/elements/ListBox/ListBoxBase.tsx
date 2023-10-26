@@ -1,6 +1,6 @@
 import React from 'react';
 import { AriaListBoxOptions, OptionAria, useListBox, useOption } from 'react-aria';
-import { ItemProps, ListState, Node } from 'react-stately';
+import { ListState, Node } from 'react-stately';
 import { mergeRefs } from '../utils.ts';
 
 export interface ListBoxBaseProps extends AriaListBoxOptions<object> {
@@ -8,7 +8,8 @@ export interface ListBoxBaseProps extends AriaListBoxOptions<object> {
   state: ListState<object>;
 }
 
-export interface OptionProps extends ItemProps<object> {
+export interface OptionProps {
+  children: React.ReactNode;
   className?: string;
 }
 
@@ -53,10 +54,10 @@ ListBoxBase.displayName = 'ListBoxBase';
 export function Option({ children, className }: OptionProps) {
   const state = React.useContext(StateContext);
   const node = React.useContext(NodeContext);
-  if (!state || !node) throw new Error('`Option` component must used with `ListBoxBase`.');
+  if (!state || !node) throw new Error('`Option` component must be used with `ListBoxBase`.');
 
   const ref = React.useRef<HTMLLIElement>(null);
-  const option = useOption({ 'key': node.key, 'aria-label': node['aria-label'] }, state, ref);
+  const option = useOption({ key: node.key }, state, ref);
   const { optionProps, isSelected, isFocused, isFocusVisible, isDisabled } = option;
 
   return (

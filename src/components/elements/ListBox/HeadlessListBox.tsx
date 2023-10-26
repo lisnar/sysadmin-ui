@@ -18,7 +18,7 @@ function intoCollectionChildren(children: React.ReactNode) {
 export function HeadlessListBox({ children, ...props }: HeadlessListBoxProps) {
   const state = useListState({ ...props, children: intoCollectionChildren(children) });
   // Each child element will be rendered as `node.rendered` in `ListBoxBase`.
-  return <ListBoxBase {...props} state={state} />;
+  return <ListBoxBase {...props} state={state} shouldFocusOnHover />;
 }
 
 // Required by eslint rule (react/display-name).

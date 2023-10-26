@@ -1,4 +1,4 @@
-import { forwardRef, useRef } from 'react';
+import React from 'react';
 import { AriaButtonProps, mergeProps, useButton, useFocusRing, useHover } from 'react-aria';
 import { mergeRefs } from '../utils.ts';
 
@@ -6,21 +6,23 @@ export interface HeadlessButtonProps extends AriaButtonProps {
   className?: string;
 }
 
-export const HeadlessButton = forwardRef<HTMLButtonElement, HeadlessButtonProps>(
+export const HeadlessButton = React.forwardRef<HTMLButtonElement, HeadlessButtonProps>(
   ({ children, className, ...props }, forwardedRef) => {
-    const ref = useRef<HTMLButtonElement>(null);
+    const ref = React.useRef<HTMLButtonElement>(null);
 
     const { buttonProps, isPressed } = useButton(props, ref);
     const { hoverProps, isHovered } = useHover(props);
-    const { focusProps, isFocusVisible } = useFocusRing(props);
+    const { focusProps, isFocused, isFocusVisible } = useFocusRing(props);
 
     return (
       <button
         {...mergeProps(buttonProps, hoverProps, focusProps)}
         ref={mergeRefs(ref, forwardedRef)}
         className={className}
+        // The value of `data-...` attributes will be 'true' or undefined. This will simplify usage of CSS selectors.
         data-pressed={isPressed || undefined}
         data-hovered={isHovered || undefined}
+        data-focused={isFocused || undefined}
         data-focus-visible={isFocusVisible || undefined}
       >
         {children}
