@@ -3,7 +3,7 @@ import { AriaComboBoxProps, useComboBox, useFilter } from 'react-aria';
 import { useComboBoxState } from 'react-stately';
 import { ChevronDownIcon } from '../../icons';
 import { HeadlessButton } from '../Button';
-import { HeadlessListBoxOld } from '../ListBox';
+import { ListBoxInner } from '../ListBox';
 import { Popover } from './Popover';
 
 // ComboBox example from React Aria docs.
@@ -60,12 +60,7 @@ export function ComboBox<T extends object>(props: AriaComboBoxProps<T>) {
           placement="bottom start"
           className="-ml-0.5 w-52"
         >
-          <HeadlessListBoxOld
-            {...listBoxProps}
-            ref={listBoxRef}
-            state={state}
-            className="max-h-72 w-full overflow-auto outline-none"
-          />
+          <ListBoxInner {...listBoxProps} ref={listBoxRef} state={state} />
         </Popover>
       )}
     </div>

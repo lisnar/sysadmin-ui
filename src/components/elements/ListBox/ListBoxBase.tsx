@@ -1,95 +1,191 @@
 import React from 'react';
-import { AriaListBoxOptions, OptionAria, useListBox, useOption } from 'react-aria';
+import {
+  AriaListBoxOptions,
+  OptionAria,
+  useListBox,
+  useListBoxSection,
+  useOption,
+} from 'react-aria';
 import { ListState, Node } from 'react-stately';
+import { FilterProps } from '../../types.ts';
 import { mergeRefs } from '../utils.ts';
 
 export interface ListBoxBaseProps extends AriaListBoxOptions<object> {
-  className?: string;
+  children: React.ReactNode;
   state: ListState<object>;
 }
 
-export interface OptionProps {
+interface LabelProps {
+  children?: (item: React.ReactNode) => React.ReactNode;
+  className?: string;
+}
+
+interface ListNode extends Node<object> {
+  type: 'section' | 'item';
+}
+
+interface ListProps {
+  children: (node: ListNode) => React.ReactNode;
+  className?: string;
+}
+
+export interface PropsWithListNode {
+  node: ListNode;
+}
+
+interface SectionProps extends PropsWithListNode {
   children: React.ReactNode;
   className?: string;
 }
 
-export interface TextProps {
+interface ItemProps extends PropsWithListNode {
+  children?: (item: React.ReactNode, state: FilterProps<OptionAria, boolean>) => React.ReactNode;
+  className?: string;
+}
+
+interface TextProps {
   children: string;
   className?: string;
   slot: 'label' | 'description';
 }
 
 const StateContext = React.createContext<ListState<object> | null>(null);
-const NodeContext = React.createContext<Node<object> | null>(null);
-const OptionContext = React.createContext<OptionAria | null>(null);
+const LabelContext = React.createContext<{
+  props: React.ComponentPropsWithoutRef<'span'>;
+} | null>(null);
+const ListContext = React.createContext<{
+  collection: Iterable<Node<object>>;
+  props: React.ComponentPropsWithoutRef<'ul'>;
+  ref?: React.RefObject<HTMLUListElement>;
+} | null>(null);
+const TextContext = React.createContext<{
+  props: Record<TextProps['slot'], React.ComponentPropsWithoutRef<'span'>>;
+} | null>(null);
 
-/**
- * This component is not for general use. It's used as part of ListBox and ComboBox.
- */
-export const ListBoxBase = React.forwardRef<HTMLUListElement, ListBoxBaseProps>(
-  ({ className, state, ...props }, forwardedRef) => {
-    const ref = React.useRef<HTMLUListElement>(null);
-    const { listBoxProps } = useListBox(props, state, ref);
-
-    return (
-      // TODO: label component, use context to pass `labelProps`
-      <ul {...listBoxProps} ref={mergeRefs(ref, forwardedRef)} className={className}>
-        <StateContext.Provider value={state}>
-          {[...state.collection].map((node) => (
-            <NodeContext.Provider key={node.key} value={node}>
-              {node.rendered}
-            </NodeContext.Provider>
-          ))}
-        </StateContext.Provider>
-      </ul>
-    );
-  },
-);
-
-// Required by eslint rule (react/display-name).
-// https://github.com/jsx-eslint/eslint-plugin-react/blob/master/docs/rules/display-name.md
-// Display name was missing because the component is an anonymous function `(props, ref) => ...`.
-ListBoxBase.displayName = 'ListBoxBase';
-
-export function Option({ children, className }: OptionProps) {
-  const state = React.useContext(StateContext);
-  const node = React.useContext(NodeContext);
-  if (!state || !node) throw new Error('`Option` component must be used with `ListBoxBase`.');
-
-  const ref = React.useRef<HTMLLIElement>(null);
-  const option = useOption({ key: node.key }, state, ref);
-  const { optionProps, isSelected, isFocused, isFocusVisible, isDisabled } = option;
+export function ListBoxBase({ children, state, ...props }: ListBoxBaseProps) {
+  const listRef = React.useRef<HTMLUListElement>(null);
+  const listBox = useListBox(props, state, listRef);
 
   return (
-    <OptionContext.Provider value={option}>
-      <li
-        {...optionProps}
-        ref={ref}
-        className={className}
-        // The value of `data-...` attributes will be 'true' or undefined. This will simplify usage of CSS selectors.
-        data-selected={isSelected || undefined}
-        data-focused={isFocused || undefined}
-        data-focus-visible={isFocusVisible || undefined}
-        data-disabled={isDisabled || undefined}
+    <LabelContext.Provider value={{ props: { ...listBox.labelProps, children: props.label } }}>
+      <ListContext.Provider
+        value={{
+          collection: state.collection,
+          props: listBox.listBoxProps,
+          ref: listRef,
+        }}
       >
-        {children}
-      </li>
-    </OptionContext.Provider>
+        <StateContext.Provider value={state}>{children}</StateContext.Provider>
+      </ListContext.Provider>
+    </LabelContext.Provider>
   );
 }
 
-export function Text({ children, className, slot }: TextProps) {
-  const option = React.useContext(OptionContext);
-  if (!option) throw new Error('`Text` component must be a child of `Option`.');
+function Label({ children = (p) => p, className, ...props }: LabelProps) {
+  const label = React.useContext(LabelContext);
+  if (!label) throw new Error('`Label` component must be a child of `ListBoxBase`.');
 
-  const ariaProps: Record<typeof slot, React.DOMAttributes<HTMLElement>> = {
-    label: option.labelProps,
-    description: option.descriptionProps,
-  };
+  const ChildComponent = React.useCallback(() => {
+    return typeof children === 'function' ? children(label.props.children) : label.props.children;
+  }, [label.props.children]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
-    <span {...ariaProps[slot]} className={className}>
-      {children}
+    <span {...props} className={className}>
+      <ChildComponent />
     </span>
   );
+}
+
+function List(
+  { children, className }: ListProps,
+  forwardedRef: React.ForwardedRef<HTMLUListElement>,
+) {
+  const list = React.useContext(ListContext);
+  if (!list) throw new Error('`List` component must be a child of `ListBoxBase`.');
+
+  const ChildComponent = React.useCallback(({ node }: PropsWithListNode) => {
+    return typeof children === 'function' ? children(node) : children;
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  return (
+    <ul {...list.props} ref={mergeRefs(list.ref!, forwardedRef)} className={className}>
+      {[...list.collection].map((node) => (
+        <ChildComponent key={node.key} node={node as ListNode} />
+      ))}
+    </ul>
+  );
+}
+
+function Section({ children, className, node }: SectionProps) {
+  const state = React.useContext(StateContext);
+  if (!state) throw new Error('`Section` component must be a child of `ListBoxBase`.');
+
+  // Section's `node.rendered` is passed from `title` props of react-stately Section component.
+  const { itemProps, headingProps, groupProps } = useListBoxSection({
+    'heading': !!node.rendered,
+    'aria-label': node['aria-label'],
+  });
+
+  return (
+    <li {...itemProps} className={className}>
+      <LabelContext.Provider value={{ props: { ...headingProps, children: node.rendered } }}>
+        <ListContext.Provider
+          value={{
+            collection: state.collection.getChildren!(node.key),
+            props: groupProps,
+          }}
+        >
+          {children}
+        </ListContext.Provider>
+      </LabelContext.Provider>
+    </li>
+  );
+}
+
+function Item({ children, className, node }: ItemProps) {
+  const state = React.useContext(StateContext);
+  if (!state) throw new Error('`Item` component must be a child of `ListBoxBase`.');
+
+  const itemRef = React.useRef<HTMLLIElement>(null);
+  const option = useOption({ key: node.key }, state, itemRef);
+  const { optionProps, labelProps, descriptionProps, ...optionState } = option;
+
+  const ChildComponent = React.useCallback(
+    (optionState: FilterProps<OptionAria, boolean>) => {
+      // Item's `node.rendered` is passed from `children` props of react-stately `Item` component.
+      return typeof children === 'function' ? children(node.rendered, optionState) : node.rendered;
+    },
+    [node.rendered], // eslint-disable-line react-hooks/exhaustive-deps
+  );
+
+  return (
+    <li
+      {...optionProps}
+      ref={itemRef}
+      className={className}
+      // The value of `data-...` attributes will be 'true' or undefined. This will simplify usage of CSS selectors.
+      data-selected={optionState.isSelected || undefined}
+      data-focused={optionState.isFocused || undefined}
+      data-focus-visible={optionState.isFocusVisible || undefined}
+      data-disabled={optionState.isDisabled || undefined}
+    >
+      <TextContext.Provider value={{ props: { label: labelProps, description: descriptionProps } }}>
+        <ChildComponent {...optionState} />
+      </TextContext.Provider>
+    </li>
+  );
+}
+
+ListBoxBase.Label = Label;
+ListBoxBase.List = React.forwardRef(List);
+ListBoxBase.Section = Section;
+ListBoxBase.Item = Item;
+
+export { Item, Section } from 'react-stately';
+
+export function Text({ slot, ...props }: TextProps) {
+  const text = React.useContext(TextContext);
+  // Children of `Item` will be rendered as `node.rendered` in `ListBoxBase.Item`.
+  if (!text) throw new Error('`Text` component must be a child of `Item`.');
+  return <span {...text.props[slot]} {...props} />;
 }

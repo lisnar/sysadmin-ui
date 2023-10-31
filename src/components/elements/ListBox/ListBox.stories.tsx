@@ -1,11 +1,11 @@
 import { Meta, StoryObj } from '@storybook/react';
 import { Item, Section, useListData, useTreeData } from 'react-stately';
-import { ListBoxExample, OptionExample } from './ListBoxExample.tsx';
+import { ListBox } from './ListBox.tsx';
 import { ListBoxOld } from './ListBoxOld.tsx';
 
-const meta: Meta<typeof ListBoxOld> = {
+const meta: Meta<typeof ListBox> = {
   title: 'Components/Elements/ListBox',
-  component: ListBoxOld,
+  component: ListBox,
   tags: ['autodocs'],
   args: {},
 };
@@ -13,25 +13,9 @@ const meta: Meta<typeof ListBoxOld> = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const WithContext: Story = {
-  render: () => (
-    <ListBoxExample label="Number" selectionMode="single">
-      <OptionExample key="1" label="One" description="lorem ipsum dolor sit amet" />
-      <OptionExample key="2" label="Two" description="consectetur adipiscing elit" />
-      <OptionExample key="3" label="Three" description="sed faucibus massa lorem" />
-      <OptionExample key="4" label="Four" description="nam elementum nibh velit" />
-      <OptionExample key="5" label="Five" description="etiam turpis ipsum" />
-      <OptionExample key="6" label="Six" description="facilisis sit amet accumsan auctor" />
-      <OptionExample key="7" label="Seven" description="varius in lectus" />
-      <OptionExample key="8" label="Eight" description="in tristique" />
-      <OptionExample key="9" label="Nine" description="tortor et convallis vestibulum" />
-    </ListBoxExample>
-  ),
-};
-
 export const Single: Story = {
   render: () => (
-    <ListBoxOld label="Number" selectionMode="single">
+    <ListBox label="Number" selectionMode="single">
       <Section title="Section 1">
         <Item key="1">One</Item>
         <Item key="2">Two</Item>
@@ -47,7 +31,7 @@ export const Single: Story = {
         <Item key="8">Eight</Item>
         <Item key="9">Nine</Item>
       </Section>
-    </ListBoxOld>
+    </ListBox>
   ),
 };
 
@@ -139,7 +123,7 @@ function ControlledListBoxWithTreeData() {
   });
 
   return (
-    <ListBoxOld
+    <ListBox
       label="People and Animals" // if label is not provided, `aria-label` must be used
       items={tree.items}
       selectionMode="multiple"
@@ -152,7 +136,7 @@ function ControlledListBoxWithTreeData() {
           {(node) => <Item key={node.key}>{node.value.name}</Item>}
         </Section>
       )}
-    </ListBoxOld>
+    </ListBox>
   );
 }
 
