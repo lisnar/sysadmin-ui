@@ -51,6 +51,7 @@ interface TextProps {
 
 const StateContext = React.createContext<ListState<object> | null>(null);
 const LabelContext = React.createContext<{
+  children: React.ReactNode;
   props: React.ComponentPropsWithoutRef<'span'>;
 } | null>(null);
 const ListContext = React.createContext<{
@@ -67,7 +68,7 @@ export function ListBoxBase({ children, state, ...props }: ListBoxBaseProps) {
   const listBox = useListBox(props, state, listRef);
 
   return (
-    <LabelContext.Provider value={{ props: { ...listBox.labelProps, children: props.label } }}>
+    <LabelContext.Provider value={{ props: listBox.labelProps, children: props.label }}>
       <ListContext.Provider
         value={{
           collection: state.collection,
@@ -81,16 +82,16 @@ export function ListBoxBase({ children, state, ...props }: ListBoxBaseProps) {
   );
 }
 
-function Label({ children = (p) => p, className, ...props }: LabelProps) {
+function Label({ children, className }: LabelProps) {
   const label = React.useContext(LabelContext);
   if (!label) throw new Error('`Label` component must be a child of `ListBoxBase`.');
 
   const ChildComponent = React.useCallback(() => {
-    return typeof children === 'function' ? children(label.props.children) : label.props.children;
-  }, [label.props.children]); // eslint-disable-line react-hooks/exhaustive-deps
+    return typeof children === 'function' ? children(label.children) : label.children;
+  }, [label.children]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
-    <span {...props} className={className}>
+    <span {...label.props} className={className}>
       <ChildComponent />
     </span>
   );
@@ -104,7 +105,7 @@ function List(
   if (!list) throw new Error('`List` component must be a child of `ListBoxBase`.');
 
   const ChildComponent = React.useCallback(({ node }: PropsWithListNode) => {
-    return typeof children === 'function' ? children(node) : children;
+    return typeof children === 'function' ? children(node) : null;
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
@@ -128,7 +129,7 @@ function Section({ children, className, node }: SectionProps) {
 
   return (
     <li {...itemProps} className={className}>
-      <LabelContext.Provider value={{ props: { ...headingProps, children: node.rendered } }}>
+      <LabelContext.Provider value={{ props: headingProps, children: node.rendered }}>
         <ListContext.Provider
           value={{
             collection: state.collection.getChildren!(node.key),
