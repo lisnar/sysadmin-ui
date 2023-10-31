@@ -60,7 +60,12 @@ export function ComboBox<T extends object>(props: AriaComboBoxProps<T>) {
           placement="bottom start"
           className="-ml-0.5 w-52"
         >
-          <ListBoxInner {...listBoxProps} ref={listBoxRef} state={state} />
+          <ListBoxInner
+            {...listBoxProps}
+            ref={listBoxRef}
+            state={state}
+            className="max-h-56 overflow-auto"
+          />
         </Popover>
       )}
     </div>

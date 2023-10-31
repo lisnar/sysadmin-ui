@@ -1,21 +1,26 @@
 import React from 'react';
 import { AriaListBoxProps } from 'react-aria';
 import { useListState } from 'react-stately';
+import { twMerge } from 'tailwind-merge';
 import { CheckIcon } from '../../icons';
 import { ListBoxBase, ListBoxBaseProps, PropsWithListNode } from './ListBoxBase.tsx';
 
-export function ListBox<T extends object>(props: AriaListBoxProps<T>) {
-  const state = useListState(props);
-  return <ListBoxInner {...props} state={state} />;
+interface ListBoxInnerProps extends Omit<ListBoxBaseProps, 'children'> {
+  className?: string;
 }
 
-export const ListBoxInner = React.forwardRef<HTMLUListElement, Omit<ListBoxBaseProps, 'children'>>(
-  (props, forwardedRef) => (
+export function ListBox<T extends object>(props: AriaListBoxProps<T>) {
+  const state = useListState(props);
+  return <ListBoxInner {...props} state={state} className="w-60" />;
+}
+
+export const ListBoxInner = React.forwardRef<HTMLUListElement, ListBoxInnerProps>(
+  ({ className, ...props }, forwardedRef) => (
     <ListBoxBase {...props} shouldFocusOnHover>
       <ListBoxBase.Label className="block text-left text-sm font-medium text-gray-700" />
       <ListBoxBase.List
         ref={forwardedRef}
-        className="max-h-96 w-60 overflow-auto rounded-md border shadow-md outline-none"
+        className={twMerge('rounded-md border shadow-md outline-none', className)}
       >
         {(node) =>
           node.type === 'section' ? (
