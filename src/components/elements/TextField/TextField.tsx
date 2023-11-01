@@ -1,6 +1,6 @@
 import { forwardRef, useRef } from 'react';
 import { AriaTextFieldProps, mergeProps, useFocusRing, useTextField } from 'react-aria';
-import { ErrorIcon } from '../../icons';
+import { ExclamationSolidIcon } from '../../icons';
 import { mergeRefs } from '../utils.ts';
 import { fieldContainerStyle, fieldHelperTextVariant, inputStyle, labelStyle } from './style.ts';
 
@@ -26,7 +26,7 @@ export const TextField = forwardRef<HTMLInputElement, AriaTextFieldProps>((props
       />
       {isInvalid && (
         <small {...errorMessageProps} className={fieldHelperTextVariant({ intent: 'error' })}>
-          <ErrorIcon size="xs" className="-ml-px mr-0.5" aria-hidden="true" />
+          <ExclamationSolidIcon size="xs" className="mr-0.5" aria-hidden="true" />
           {errorMessage}
         </small>
       )}

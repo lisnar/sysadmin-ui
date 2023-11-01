@@ -10,6 +10,8 @@ import { ListState, Node } from 'react-stately';
 import { FilterProps } from '../../types.ts';
 import { mergeRefs } from '../utils.ts';
 
+export { Item, Section } from 'react-stately';
+
 export interface ListBoxBaseProps extends AriaListBoxOptions<object> {
   children: React.ReactNode;
   state: ListState<object>;
@@ -87,14 +89,14 @@ function Label({ children, className }: LabelProps) {
   if (!label) throw new Error('`Label` component must be a child of `ListBoxBase`.');
 
   const ChildComponent = React.useCallback(() => {
-    return typeof children === 'function' ? children(label.children) : label.children;
+    return children?.(label.children) ?? label.children;
   }, [label.children]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  return (
+  return label.children ? (
     <span {...label.props} className={className}>
       <ChildComponent />
     </span>
-  );
+  ) : null;
 }
 
 function List(
@@ -105,7 +107,7 @@ function List(
   if (!list) throw new Error('`List` component must be a child of `ListBoxBase`.');
 
   const ChildComponent = React.useCallback(({ node }: PropsWithListNode) => {
-    return typeof children === 'function' ? children(node) : null;
+    return children?.(node);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
@@ -154,7 +156,7 @@ function Item({ children, className, node }: ItemProps) {
   const ChildComponent = React.useCallback(
     (optionState: FilterProps<OptionAria, boolean>) => {
       // Item's `node.rendered` is passed from `children` props of react-stately `Item` component.
-      return typeof children === 'function' ? children(node.rendered, optionState) : node.rendered;
+      return children?.(node.rendered, optionState) ?? node.rendered;
     },
     [node.rendered], // eslint-disable-line react-hooks/exhaustive-deps
   );
@@ -181,8 +183,6 @@ ListBoxBase.Label = Label;
 ListBoxBase.List = React.forwardRef(List);
 ListBoxBase.Section = Section;
 ListBoxBase.Item = Item;
-
-export { Item, Section } from 'react-stately';
 
 export function Text({ slot, ...props }: TextProps) {
   const text = React.useContext(TextContext);

@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { AriaComboBoxProps, useComboBox, useFilter } from 'react-aria';
 import { useComboBoxState } from 'react-stately';
-import { ChevronDownIcon } from '../../icons';
+import { SelectorIcon } from '../../icons';
 import { HeadlessButton } from '../Button';
 import { ListBoxInner } from '../ListBox';
 import { Popover } from './Popover';
@@ -48,7 +48,7 @@ export function ComboBox<T extends object>(props: AriaComboBoxProps<T>) {
             state.isFocused ? 'border-pink-500 text-pink-600' : 'border-gray-300 text-gray-500'
           }`}
         >
-          <ChevronDownIcon className="h-5 w-5" aria-hidden="true" />
+          <SelectorIcon size="sm" aria-hidden="true" />
         </HeadlessButton>
       </div>
       {state.isOpen && (
