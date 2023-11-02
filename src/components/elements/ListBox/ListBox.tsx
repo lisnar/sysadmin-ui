@@ -3,35 +3,46 @@ import { AriaListBoxProps } from 'react-aria';
 import { useListState } from 'react-stately';
 import { twMerge } from 'tailwind-merge';
 import { CheckIcon } from '../../icons';
+import { classNames } from '../utils.ts';
 import { ListBoxBase, ListBoxBaseProps, PropsWithListNode } from './ListBoxBase.tsx';
 
-interface ListBoxInnerProps extends Omit<ListBoxBaseProps, 'children'> {
+interface ListBoxInnerProps extends Omit<ListBoxBaseProps, 'children' | 'label'> {
   className?: string;
 }
 
 export function ListBox<T extends object>(props: AriaListBoxProps<T>) {
   const state = useListState(props);
-  return <ListBoxInner {...props} state={state} className="w-60" />;
+  return (
+    <div className="w-60">
+      <ListBoxInner {...props} state={state} />
+    </div>
+  );
 }
 
 export const ListBoxInner = React.forwardRef<HTMLUListElement, ListBoxInnerProps>(
   ({ className, ...props }, forwardedRef) => (
     <ListBoxBase {...props} shouldFocusOnHover>
-      <ListBoxBase.Label className="block text-left text-sm font-medium text-gray-700" />
+      <ListBoxBase.Label className="mx-3 text-sm font-medium text-gray-700" />
       <ListBoxBase.List
         ref={forwardedRef}
-        className={twMerge('rounded-md border shadow-md outline-none', className)}
+        className={twMerge(
+          'cursor-default select-none overflow-auto rounded-md border bg-white py-1 shadow-md',
+          className,
+        )}
       >
         {(node) =>
           node.type === 'section' ? (
-            <ListBoxBase.Section key={node.key} node={node} className="pt-2">
-              <ListBoxBase.Label className="mx-3 text-xs font-bold uppercase text-gray-500" />
-              <ListBoxBase.List>
-                {(node) => <ListBoxBaseItem key={node.key} node={node} />}
-              </ListBoxBase.List>
-            </ListBoxBase.Section>
+            <React.Fragment>
+              <li role="presentation" className="mx-2 my-1 border-t border-gray-300 first:hidden" />
+              <ListBoxBase.Section key={node.key} node={node}>
+                <ListBoxBase.Label className="mx-3 text-xs font-bold uppercase text-gray-500" />
+                <ListBoxBase.List>
+                  {(node) => <ListBoxItem key={node.key} node={node} />}
+                </ListBoxBase.List>
+              </ListBoxBase.Section>
+            </React.Fragment>
           ) : (
-            <ListBoxBaseItem key={node.key} node={node} />
+            <ListBoxItem key={node.key} node={node} />
           )
         }
       </ListBoxBase.List>
@@ -44,17 +55,30 @@ export const ListBoxInner = React.forwardRef<HTMLUListElement, ListBoxInnerProps
 // Display name was missing because the component is an anonymous function `(props, ref) => ...`.
 ListBoxInner.displayName = 'ListBoxInner';
 
-function ListBoxBaseItem({ node }: PropsWithListNode) {
+function ListBoxItem({ node }: PropsWithListNode) {
   return (
     <ListBoxBase.Item
       node={node}
-      className="m-1 flex cursor-default items-center justify-between rounded-md px-2 py-2 text-sm text-gray-700 outline-none data-[focused]:bg-pink-100 data-[selected]:font-bold data-[disabled]:text-gray-200 data-[focused]:text-pink-600 data-[selected]:text-pink-600"
+      className={classNames(
+        'relative py-2 pl-3 pr-9 text-sm', // layout
+        'outline-none data-focused:bg-indigo-600 data-focused:text-white', // focused state
+        'data-disabled:pointer-events-none data-disabled:text-gray-400', // disabled state
+      )}
     >
       {(item, state) => (
-        <>
+        <React.Fragment>
           {item}
-          {state.isSelected && <CheckIcon aria-hidden="true" className="h-5 w-5 text-pink-600" />}
-        </>
+          {state.isSelected && (
+            <CheckIcon
+              size="sm"
+              className={classNames(
+                'absolute right-3 top-1/2 -translate-y-1/2',
+                state.isFocused ? 'text-white' : 'text-indigo-600',
+              )}
+              aria-hidden="true"
+            />
+          )}
+        </React.Fragment>
       )}
     </ListBoxBase.Item>
   );

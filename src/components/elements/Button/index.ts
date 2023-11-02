@@ -1,2 +1,2 @@
 export * from './Button.tsx';
-export * from './HeadlessButton.tsx';
+export * from './ButtonBase.tsx';

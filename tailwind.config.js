@@ -7,6 +7,15 @@
 export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
+    data: {
+      // Ordered by priority (lowest to highest).
+      'focus-visible': 'focus-visible=true',
+      'focused': 'focused=true',
+      'hovered': 'hovered=true',
+      'pressed': 'pressed=true',
+      'invalid': 'invalid=true',
+      'disabled': 'disabled=true',
+    },
     extend: {},
   },
   plugins: [require('@tailwindcss/forms')],

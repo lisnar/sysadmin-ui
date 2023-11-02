@@ -37,13 +37,13 @@ function ControlledListBox() {
       items={list.items}
       selectionMode="single"
       selectedKeys={list.selectedKeys}
-      disabledKeys={[4]}
+      disabledKeys={['4']}
       // Using arrow function to suppress `@typescript-eslint/unbound-method` error.
       onSelectionChange={(keys) => list.setSelectedKeys(keys)}
     >
-      {(entity) => (
-        <Item>
-          <Text slot="label">{entity.name}</Text>
+      {(item) => (
+        <Item key={item.id}>
+          <Text slot="label">{item.name}</Text>
         </Item>
       )}
     </ListBox>
@@ -88,7 +88,7 @@ function ControlledListBoxWithTreeData() {
       items={tree.items}
       selectionMode="multiple"
       selectedKeys={tree.selectedKeys}
-      disabledKeys={[4]}
+      disabledKeys={['21']}
       onSelectionChange={(keys) => keys !== 'all' && tree.setSelectedKeys(keys)}
     >
       {(node) => (

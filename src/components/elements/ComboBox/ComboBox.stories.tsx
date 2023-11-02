@@ -1,76 +1,85 @@
 import { Meta, StoryObj } from '@storybook/react';
-import { Item } from 'react-stately';
+import { useListData, useTreeData } from 'react-stately';
+import { Item, Section, Text } from '../ListBox';
 import { ComboBox } from './ComboBox.tsx';
 
 const meta: Meta<typeof ComboBox> = {
   title: 'Components/Elements/ComboBox',
   component: ComboBox,
-  // tags: ['autodocs'],
+  tags: ['autodocs'],
   args: {},
 };
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Overflow: Story = {
-  render: () => (
-    <ComboBox label="State">
-      <Item>Alabama</Item>
-      <Item>Alaska</Item>
-      <Item>American Samoa</Item>
-      <Item>Arizona</Item>
-      <Item>Arkansas</Item>
-      <Item>California</Item>
-      <Item>Colorado</Item>
-      <Item>Connecticut</Item>
-      <Item>Delaware</Item>
-      <Item>District of Columbia</Item>
-      <Item>Florida</Item>
-      <Item>Georgia</Item>
-      <Item>Guam</Item>
-      <Item>Hawaii</Item>
-      <Item>Idaho</Item>
-      <Item>Illinois</Item>
-      <Item>Indiana</Item>
-      <Item>Iowa</Item>
-      <Item>Kansas</Item>
-      <Item>Kentucky</Item>
-      <Item>Louisiana</Item>
-      <Item>Maine</Item>
-      <Item>Maryland</Item>
-      <Item>Massachusetts</Item>
-      <Item>Michigan</Item>
-      <Item>Minnesota</Item>
-      <Item>Mississippi</Item>
-      <Item>Missouri</Item>
-      <Item>Montana</Item>
-      <Item>Nebraska</Item>
-      <Item>Nevada</Item>
-      <Item>New Hampshire</Item>
-      <Item>New Jersey</Item>
-      <Item>New Mexico</Item>
-      <Item>New York</Item>
-      <Item>North Carolina</Item>
-      <Item>North Dakota</Item>
-      <Item>Northern Marianas Islands</Item>
-      <Item>Ohio</Item>
-      <Item>Oklahoma</Item>
-      <Item>Oregon</Item>
-      <Item>Pennsylvania</Item>
-      <Item>Puerto Rico</Item>
-      <Item>Rhode Island</Item>
-      <Item>South Carolina</Item>
-      <Item>South Dakota</Item>
-      <Item>Tennessee</Item>
-      <Item>Texas</Item>
-      <Item>Utah</Item>
-      <Item>Vermont</Item>
-      <Item>Virginia</Item>
-      <Item>Virgin Islands</Item>
-      <Item>Washington</Item>
-      <Item>West Virginia</Item>
-      <Item>Wisconsin</Item>
-      <Item>Wyoming</Item>
+interface Entity {
+  id: number;
+  name: string;
+  children?: Entity[];
+}
+
+const animals = ['Lion', 'Elephant', 'Tiger', 'Giraffe', 'Disabled Kangaroo', 'Zebra', 'Panda', 'Hippopotamus', 'Koala', 'Leopard', 'Rhinoceros', 'Cheetah', 'Penguin', 'Gorilla', 'Polar Bear', 'Ostrich', 'Puma', 'Camel', 'Dolphin', 'Octopus', 'Toucan', 'Lemur', 'Flamingo', 'Orangutan', 'Pangolin', 'Armadillo', 'Sloth', 'Peacock', 'Seahorse', 'Jaguar', 'Hedgehog', 'Kangaroo', 'Capybara', 'Otter', 'Platypus', 'Raccoon', 'Vulture'] // prettier-ignore
+const people = ['Alice', 'Bob', 'Charlie', 'David', 'Emma', 'Frank', 'Grace', 'Henry', 'Isabel', 'Jack', 'Katherine', 'Liam', 'Mia', 'Nathan', 'Olivia', 'Peter', 'Quinn', 'Rachel', 'Samuel', 'Taylor', 'Ursula', 'Vincent', 'Wendy', 'Xander', 'Yvonne', 'Zachary', 'Sophia', 'Michael', 'Ava', 'James', 'Elizabeth', 'Daniel', 'Ella', 'William', 'Chloe', 'Ethan', 'Matthew', 'Emily', 'Benjamin', 'Oliver', 'Lily', 'Joseph', 'Abigail', 'John', 'Natalie', 'Noah', 'Avery']; // prettier-ignore
+
+function ControlledListBox() {
+  const list = useListData<Entity>({
+    initialItems: animals.map((v, i) => ({ id: i, name: v })),
+    getKey: (item) => item.id,
+  });
+
+  return (
+    <ComboBox
+      label="Animals" // if label is not provided, `aria-label` must be used
+      defaultItems={list.items}
+      disabledKeys={['4']}
+    >
+      {(item) => (
+        <Item key={item.id} textValue={item.name}>
+          <Text slot="label">{item.name}</Text>
+        </Item>
+      )}
     </ComboBox>
-  ),
+  );
+}
+
+export const ControlledList: Story = {
+  render: ControlledListBox,
+};
+
+function ControlledListBoxWithTreeData() {
+  const tree = useTreeData<Entity>({
+    initialItems: [
+      {
+        id: 1,
+        name: 'People',
+        children: people.map((v, i) => ({ id: i + 100, name: v })),
+      },
+      {
+        id: 2,
+        name: 'Animals',
+        children: animals.map((v, i) => ({ id: i + 200, name: v })),
+      },
+    ],
+    getKey: (item) => item.id,
+    getChildren: (item) => item.children ?? [],
+  });
+
+  return (
+    <ComboBox label="People and Animals" defaultItems={tree.items}>
+      {(node) => (
+        <Section key={node.key} title={node.value.name} items={node.children}>
+          {(node) => (
+            <Item key={node.key} textValue={node.value.name}>
+              <Text slot="label">{node.value.name}</Text>
+            </Item>
+          )}
+        </Section>
+      )}
+    </ComboBox>
+  );
+}
+
+export const ControlledTree: Story = {
+  render: ControlledListBoxWithTreeData,
 };

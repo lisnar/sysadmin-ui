@@ -2,20 +2,21 @@ import { cva, VariantProps } from 'class-variance-authority';
 import { NonNullProps } from '../../types.ts';
 import { classNames } from '../utils.ts';
 
-export const fieldContainerStyle = 'relative flex w-64 flex-col text-gray-900';
-export const labelStyle = 'absolute -top-2 left-2 -mt-px rounded bg-white px-1 text-xs font-medium';
-export const inputStyle = classNames(
-  'rounded-md px-3 py-2 text-sm shadow-sm transition duration-75',
-  'border-gray-300 bg-white placeholder-gray-400', // base color
-  'data-[focused]:border-indigo-600 data-[focused]:ring-4 data-[focused]:ring-indigo-200', // data-[focused] ring
-  'data-[invalid]:border-red-600 data-[focused]:data-[invalid]:ring-red-200', // invalid state
-  'disabled:bg-gray-50', // disabled state
+export const fieldContainerStyle = 'flex w-64 flex-col';
+export const fieldLabelStyle =
+  'absolute -top-2 left-2 text-gray-900 -mt-px rounded bg-white px-1 text-xs font-medium';
+export const fieldInputStyle = classNames(
+  'w-full text-sm transition duration-75', // layout
+  'rounded-md border-gray-400 bg-white text-gray-900 placeholder-gray-400 shadow-sm', // appearance
+  'data-focused:border-indigo-600 data-focused:ring-4 data-focused:ring-indigo-200', // focused state
+  'data-invalid:border-red-600 data-invalid:ring-red-200', // invalid state
+  'data-disabled:bg-gray-50 data-disabled:text-gray-400', // disabled state
 );
 
-export const fieldHelperTextVariant = cva('relative ml-3 mt-1 inline-flex items-center text-xs', {
+export const fieldHelperTextVariant = cva('relative mx-3 mt-1 inline-flex items-center text-xs', {
   variants: {
     intent: {
-      description: 'font-light',
+      description: 'font-light text-gray-900',
       error: 'font-medium text-red-600',
     },
   },

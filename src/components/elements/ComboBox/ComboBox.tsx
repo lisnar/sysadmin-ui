@@ -1,73 +1,122 @@
-import { useEffect, useRef } from 'react';
+/* eslint-disable @typescript-eslint/unbound-method */
+import React from 'react';
 import { AriaComboBoxProps, useComboBox, useFilter } from 'react-aria';
-import { useComboBoxState } from 'react-stately';
-import { SelectorIcon } from '../../icons';
-import { HeadlessButton } from '../Button';
+import { ComboBoxState, useComboBoxState } from 'react-stately';
+import { ExclamationSolidIcon, SelectorIcon } from '../../icons';
+import { ButtonBase } from '../Button';
 import { ListBoxInner } from '../ListBox';
-import { Popover } from './Popover';
+import {
+  fieldContainerStyle,
+  fieldHelperTextVariant,
+  fieldInputStyle,
+  fieldLabelStyle,
+} from '../TextField/style.ts';
+import { classNames } from '../utils.ts';
+import { Popover } from './Popover.tsx';
 
 // ComboBox example from React Aria docs.
 export function ComboBox<T extends object>(props: AriaComboBoxProps<T>) {
-  const { contains } = useFilter({ sensitivity: 'base' }); // eslint-disable-line @typescript-eslint/unbound-method
+  const { contains } = useFilter({ sensitivity: 'base' });
   const state = useComboBoxState({ ...props, defaultFilter: contains, menuTrigger: 'focus' });
-  const { isOpen, collection, selectedKey, selectionManager } = state;
+  useAutoFocusOption(state);
 
-  // When ListBox is opened or updated, set focus to selected item (if available) or first item.
-  useEffect(() => {
-    if (isOpen && collection.size > 0) {
-      const focusedKey = collection.getItem(selectedKey) ? selectedKey : collection.getFirstKey();
-      selectionManager.setFocusedKey(focusedKey);
-    }
-  }, [isOpen, collection]); // eslint-disable-line react-hooks/exhaustive-deps
+  const buttonRef = React.useRef<HTMLButtonElement>(null);
+  const inputRef = React.useRef<HTMLInputElement>(null);
+  const listBoxRef = React.useRef<HTMLUListElement>(null);
+  const popoverRef = React.useRef<HTMLDivElement>(null);
 
-  const buttonRef = useRef<HTMLButtonElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
-  const listBoxRef = useRef<HTMLUListElement>(null);
-  const popoverRef = useRef<HTMLDivElement>(null);
+  const { inputProps, labelProps, descriptionProps, errorMessageProps, buttonProps, listBoxProps } =
+    useComboBox({ ...props, inputRef, buttonRef, listBoxRef, popoverRef }, state);
 
-  const { buttonProps, inputProps, listBoxProps, labelProps } = useComboBox(
-    { ...props, inputRef, buttonRef, listBoxRef, popoverRef },
-    state,
-  );
+  const { isOpen, isFocused } = state;
+  const { label, description, errorMessage, isDisabled } = props;
+  const isInvalid = !!errorMessage && !isDisabled;
 
   return (
-    <div className="relative inline-flex w-52 flex-col">
-      <label {...labelProps} className="block text-left text-sm font-medium text-gray-700">
-        {props.label}
-      </label>
-      <div
-        className={`relative flex flex-row overflow-hidden rounded-md border-2 shadow-sm ${
-          state.isFocused ? 'border-pink-500' : 'border-gray-300'
-        }`}
-      >
-        <input {...inputProps} ref={inputRef} className="w-full border-0 px-3 py-1 outline-none" />
-        <HeadlessButton
-          {...buttonProps}
-          ref={buttonRef}
-          className={`cursor-default border-l-2 bg-gray-100 px-1 ${
-            state.isFocused ? 'border-pink-500 text-pink-600' : 'border-gray-300 text-gray-500'
-          }`}
-        >
-          <SelectorIcon size="sm" aria-hidden="true" />
-        </HeadlessButton>
+    <div className={fieldContainerStyle}>
+      {/* input group */}
+      <div className="relative">
+        <label {...labelProps} className={fieldLabelStyle}>
+          {label}
+        </label>
+        <input
+          {...inputProps}
+          ref={inputRef}
+          className={classNames(fieldInputStyle, 'pr-8')}
+          data-focused={isFocused || undefined}
+          data-invalid={isInvalid || undefined}
+          data-disabled={isDisabled! || undefined}
+        />
+        {/* trigger button */}
+        <ButtonBase {...buttonProps} ref={buttonRef} className="absolute inset-y-0 right-0 px-2">
+          <SelectorIcon
+            size="sm"
+            className="text-gray-400 transition duration-75"
+            aria-hidden="true"
+          />
+        </ButtonBase>
       </div>
-      {state.isOpen && (
+
+      {/* helper text group */}
+      {isInvalid && (
+        <small {...errorMessageProps} className={fieldHelperTextVariant({ intent: 'error' })}>
+          <ExclamationSolidIcon size="xs" className="mr-0.5" aria-hidden="true" />
+          {errorMessage}
+        </small>
+      )}
+      {description && (
+        <small {...descriptionProps} className={fieldHelperTextVariant({ intent: 'description' })}>
+          {description}
+        </small>
+      )}
+
+      {/* popover & listbox */}
+      {isOpen && (
         <Popover
           popoverRef={popoverRef}
           triggerRef={inputRef}
           state={state}
+          placement="bottom"
+          className="mb-4 mt-1.5"
           isNonModal
-          placement="bottom start"
-          className="-ml-0.5 w-52"
         >
           <ListBoxInner
             {...listBoxProps}
             ref={listBoxRef}
             state={state}
-            className="max-h-56 overflow-auto"
+            className="max-h-60 w-64 shadow-lg"
           />
         </Popover>
       )}
     </div>
   );
+}
+
+/**
+ * When ListBox is opened or updated, set focus to last selected option (if available) or first option.
+ */
+function useAutoFocusOption({
+  isOpen,
+  collection,
+  selectedKey,
+  selectionManager,
+}: ComboBoxState<unknown>) {
+  const [previousKey, setPreviousKey] = React.useState(selectedKey);
+
+  React.useEffect(() => {
+    if (selectedKey) setPreviousKey(selectedKey);
+  }, [selectedKey]);
+
+  React.useEffect(() => {
+    if (isOpen && collection.size > 0) {
+      let focusedKey = collection.getItem(previousKey) ? previousKey : collection.getFirstKey();
+      while (
+        focusedKey &&
+        (collection.getItem(focusedKey)?.type !== 'item' || selectionManager.isDisabled(focusedKey))
+      ) {
+        focusedKey = collection.getKeyAfter(focusedKey);
+      }
+      if (focusedKey) selectionManager.setFocusedKey(focusedKey);
+    }
+  }, [isOpen, collection]); // eslint-disable-line react-hooks/exhaustive-deps
 }
