@@ -1,8 +1,13 @@
 import { forwardRef, useRef } from 'react';
 import { AriaTextFieldProps, mergeProps, useFocusRing, useTextField } from 'react-aria';
-import { ErrorIcon } from '../../icons';
+import { ExclamationSolidIcon } from '../../icons';
 import { mergeRefs } from '../utils.ts';
-import { fieldContainerStyle, fieldHelperTextVariant, inputStyle, labelStyle } from './style.ts';
+import {
+  fieldContainerStyle,
+  fieldHelperTextVariant,
+  fieldInputStyle,
+  fieldLabelStyle,
+} from './style.ts';
 
 export const TextField = forwardRef<HTMLInputElement, AriaTextFieldProps>((props, forwardedRef) => {
   const { label, description, errorMessage, isDisabled } = props;
@@ -14,19 +19,23 @@ export const TextField = forwardRef<HTMLInputElement, AriaTextFieldProps>((props
 
   return (
     <div className={fieldContainerStyle}>
-      <label {...labelProps} className={labelStyle}>
-        {label}
-      </label>
-      <input
-        {...mergeProps(inputProps, focusProps)}
-        ref={mergeRefs(ref, forwardedRef)}
-        className={inputStyle}
-        data-focused={isFocused || undefined}
-        data-invalid={isInvalid || undefined}
-      />
+      <div className="relative">
+        <label {...labelProps} className={fieldLabelStyle}>
+          {label}
+        </label>
+        <input
+          {...mergeProps(inputProps, focusProps)}
+          ref={mergeRefs(ref, forwardedRef)}
+          className={fieldInputStyle}
+          // The value of `data-...` attributes will be 'true' or undefined. This will simplify usage of CSS selectors.
+          data-focused={isFocused || undefined}
+          data-invalid={isInvalid || undefined}
+          data-disabled={isDisabled! || undefined}
+        />
+      </div>
       {isInvalid && (
         <small {...errorMessageProps} className={fieldHelperTextVariant({ intent: 'error' })}>
-          <ErrorIcon size="xs" className="-ml-px mr-0.5" aria-hidden="true" />
+          <ExclamationSolidIcon size="xs" className="mr-0.5" aria-hidden="true" />
           {errorMessage}
         </small>
       )}

@@ -1,115 +1,86 @@
-import { useRef } from 'react';
-import { AriaListBoxProps, useListBox, useListBoxSection, useOption } from 'react-aria';
-import { ListState, Node, useListState } from 'react-stately';
+import React from 'react';
+import { AriaListBoxProps } from 'react-aria';
+import { useListState } from 'react-stately';
+import { twMerge } from 'tailwind-merge';
 import { CheckIcon } from '../../icons';
-import {
-  listBoxLabelStyle,
-  listBoxOptionContainerStyle,
-  listBoxOptionDescriptionStyle,
-  listBoxOptionItemStyle,
-  listBoxSectionHeadingStyle,
-  listBoxSectionSeparatorStyle,
-  listBoxULStyle,
-} from './style.ts';
+import { classNames } from '../utils.ts';
+import { ListBoxBase, ListBoxBaseProps, PropsWithListNode } from './ListBoxBase.tsx';
+
+interface ListBoxInnerProps extends Omit<ListBoxBaseProps, 'children' | 'label'> {
+  className?: string;
+}
 
 export function ListBox<T extends object>(props: AriaListBoxProps<T>) {
   const state = useListState(props);
-  const ref = useRef(null);
-
-  const { listBoxProps, labelProps } = useListBox(
-    {
-      ...props,
-      shouldFocusOnHover: true,
-      shouldFocusWrap: true,
-    },
-    state,
-    ref,
-  );
-
   return (
     <div className="w-60">
-      <div {...labelProps} className={listBoxLabelStyle}>
-        {props.label}
-      </div>
-      <ul {...listBoxProps} ref={ref} className={listBoxULStyle}>
-        {[...state.collection].map((item) => {
-          const ListBoxItem = item.type === 'section' ? ListBoxSection : ListBoxOption;
-          return <ListBoxItem key={item.key} item={item} state={state} />;
-        })}
-      </ul>
+      <ListBoxInner {...props} state={state} />
     </div>
   );
 }
 
-interface ListBoxItemProps<T> {
-  item: Node<T>;
-  state: ListState<T>;
-}
-
-function ListBoxOption<T extends object>({ item, state }: ListBoxItemProps<T>) {
-  const ref = useRef(null);
-
-  const { optionProps, descriptionProps, isSelected, isDisabled } = useOption(
-    {
-      'key': item.key,
-      'aria-label': item['aria-label'],
-    },
-    state,
-    ref,
-  );
-
-  return (
-    <li
-      {...optionProps}
-      ref={ref}
-      className={listBoxOptionContainerStyle}
-      data-selected={isSelected || undefined}
-      data-disabled={isDisabled || undefined}
-    >
-      <span className={listBoxOptionItemStyle}>{item.rendered}</span>
-      {/* TODO: use context to get descriptionProps and pass component from `item.rendered` */}
-      <span {...descriptionProps} className={listBoxOptionDescriptionStyle}>
-        @{item.type}
-      </span>
-      {/* TODO: create `SelectedMark` component, pass icon and className as props. Add data-focused and data-focus-visible. */}
-      {isSelected && (
-        <CheckIcon
-          size="sm"
-          className="absolute right-3 top-1/2 -translate-y-1/2"
-          aria-hidden="true"
-        />
-      )}
-    </li>
-  );
-}
-
-function ListBoxSection<T extends object>({ item, state }: ListBoxItemProps<T>) {
-  const { itemProps, headingProps, groupProps } = useListBoxSection({
-    'heading': item.rendered,
-    'aria-label': item['aria-label'],
-  });
-
-  // If the section is not the first, add a separator element to provide visual separation.
-  // The heading is rendered inside an <li> element, which contains
-  // a <ul> with the child items.
-  return (
-    <>
-      {/* TODO: this can be separated from Section as optional SectionSeparator component */}
-      {item.key !== state.collection.getFirstKey() && (
-        <li role="presentation" className={listBoxSectionSeparatorStyle} />
-      )}
-      <li {...itemProps}>
-        {item.rendered && (
-          <div className={listBoxSectionHeadingStyle}>
-            <span {...headingProps}>{item.rendered}</span>
-          </div>
+export const ListBoxInner = React.forwardRef<HTMLUListElement, ListBoxInnerProps>(
+  ({ className, ...props }, forwardedRef) => (
+    <ListBoxBase {...props} shouldFocusOnHover>
+      <ListBoxBase.Label className="mx-3 text-sm font-medium text-gray-700" />
+      <ListBoxBase.List
+        ref={forwardedRef}
+        className={twMerge(
+          'cursor-default select-none overflow-auto border py-1', // behavior & layout
+          'rounded-md border-gray-200 bg-white shadow-md', // appearance
+          className,
         )}
-        <ul {...groupProps}>
-          {[...state.collection.getChildren!(item.key)].map((node) => (
-            <ListBoxOption key={node.key} item={node} state={state} />
-          ))}
-        </ul>
-      </li>
-    </>
+      >
+        {(node) =>
+          node.type === 'section' ? (
+            <React.Fragment>
+              <li role="presentation" className="mx-2 my-1 border-t border-gray-300 first:hidden" />
+              <ListBoxBase.Section key={node.key} node={node}>
+                <ListBoxBase.Label className="mx-3 text-xs font-bold uppercase text-gray-500" />
+                <ListBoxBase.List>
+                  {(node) => <ListBoxItem key={node.key} node={node} />}
+                </ListBoxBase.List>
+              </ListBoxBase.Section>
+            </React.Fragment>
+          ) : (
+            <ListBoxItem key={node.key} node={node} />
+          )
+        }
+      </ListBoxBase.List>
+    </ListBoxBase>
+  ),
+);
+
+// Required by eslint rule (react/display-name).
+// https://github.com/jsx-eslint/eslint-plugin-react/blob/master/docs/rules/display-name.md
+// Display name was missing because the component is an anonymous function `(props, ref) => ...`.
+ListBoxInner.displayName = 'ListBoxInner';
+
+function ListBoxItem({ node }: PropsWithListNode) {
+  return (
+    <ListBoxBase.Item
+      node={node}
+      className={classNames(
+        'relative py-2 pl-3 pr-9 text-sm', // layout
+        'outline-none data-focused:bg-indigo-600 data-focused:text-white', // focused state
+        'data-disabled:pointer-events-none data-disabled:text-gray-400', // disabled state
+      )}
+    >
+      {(item, state) => (
+        <React.Fragment>
+          {item}
+          {state.isSelected && (
+            <CheckIcon
+              size="sm"
+              className={classNames(
+                'absolute right-3 top-1/2 -translate-y-1/2',
+                state.isFocused ? 'text-white' : 'text-indigo-600',
+              )}
+              aria-hidden="true"
+            />
+          )}
+        </React.Fragment>
+      )}
+    </ListBoxBase.Item>
   );
 }

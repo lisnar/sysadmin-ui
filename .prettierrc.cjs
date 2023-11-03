@@ -10,5 +10,5 @@ module.exports = {
   ],
   // Sort tailwind classes outside the `className` attribute.
   // https://github.com/tailwindlabs/prettier-plugin-tailwindcss#sorting-classes-in-function-calls
-  tailwindFunctions: ['cva'],
+  tailwindFunctions: ['classNames', 'cva'],
 };

@@ -2,7 +2,7 @@ import { twMerge } from 'tailwind-merge';
 import { iconClassVariants } from './style.ts';
 import { IconProps } from './types.ts';
 
-export function ErrorIcon({ className, size, ...props }: IconProps) {
+export function ExclamationSolidIcon({ className, size, ...props }: IconProps) {
   return (
     // SVG taken from https://www.tailwindtap.com/resources/icons
     <svg
