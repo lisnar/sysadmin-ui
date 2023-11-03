@@ -14,7 +14,6 @@ import {
 import { classNames } from '../utils.ts';
 import { Popover } from './Popover.tsx';
 
-// ComboBox example from React Aria docs.
 export function ComboBox<T extends object>(props: AriaComboBoxProps<T>) {
   const { contains } = useFilter({ sensitivity: 'base' });
   const state = useComboBoxState({ ...props, defaultFilter: contains, menuTrigger: 'focus' });
@@ -116,7 +115,7 @@ function useAutoFocusOption({
       ) {
         focusedKey = collection.getKeyAfter(focusedKey);
       }
-      if (focusedKey) selectionManager.setFocusedKey(focusedKey);
+      selectionManager.setFocusedKey(focusedKey);
     }
   }, [isOpen, collection]); // eslint-disable-line react-hooks/exhaustive-deps
 }

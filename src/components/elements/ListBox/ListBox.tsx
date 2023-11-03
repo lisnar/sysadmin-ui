@@ -26,7 +26,8 @@ export const ListBoxInner = React.forwardRef<HTMLUListElement, ListBoxInnerProps
       <ListBoxBase.List
         ref={forwardedRef}
         className={twMerge(
-          'cursor-default select-none overflow-auto rounded-md border bg-white py-1 shadow-md',
+          'cursor-default select-none overflow-auto border py-1', // behavior & layout
+          'rounded-md border-gray-200 bg-white shadow-md', // appearance
           className,
         )}
       >
