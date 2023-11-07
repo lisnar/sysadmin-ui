@@ -1,3 +1,5 @@
+import colors from 'tailwindcss/colors';
+
 // Setup TailwindCSS in Vite project with Prettier and Storybook:
 // - https://tailwindcss.com/docs/guides/vite
 // - https://tailwindcss.com/blog/automatic-class-sorting-with-prettier
@@ -8,13 +10,26 @@ export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     data: {
-      // Ordered by priority (lowest to highest).
+      // ordered by priority (lowest to highest)
       'focus-visible': 'focus-visible=true',
       'focused': 'focused=true',
       'hovered': 'hovered=true',
       'pressed': 'pressed=true',
       'invalid': 'invalid=true',
       'disabled': 'disabled=true',
+    },
+    colors: {
+      // single colors
+      current: colors.current,
+      inherit: colors.inherit,
+      transparent: colors.transparent,
+      white: colors.white,
+      black: colors.black,
+      // palettes
+      gray: colors.gray,
+      accent: colors.blue,
+      success: colors.emerald,
+      warning: colors.rose,
     },
     extend: {},
   },

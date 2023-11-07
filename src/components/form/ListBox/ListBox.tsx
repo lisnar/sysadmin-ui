@@ -61,8 +61,8 @@ function ListBoxItem({ node }: PropsWithListNode) {
     <ListBoxBase.Item
       node={node}
       className={classNames(
-        'relative py-2 pl-3 pr-9 text-sm', // layout
-        'data-focused:bg-indigo-600 outline-none data-focused:text-white', // focused state
+        'relative py-2 pl-3 pr-9 text-sm text-gray-900', // layout
+        'outline-none data-focused:bg-accent-600 data-focused:text-white', // focused state
         'data-disabled:pointer-events-none data-disabled:text-gray-400', // disabled state
       )}
     >
@@ -74,7 +74,7 @@ function ListBoxItem({ node }: PropsWithListNode) {
               size="sm"
               className={classNames(
                 'absolute right-3 top-1/2 -translate-y-1/2',
-                state.isFocused ? 'text-white' : 'text-indigo-600',
+                state.isFocused ? 'text-white' : 'text-accent-600',
               )}
               aria-hidden="true"
             />
