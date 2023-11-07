@@ -1,6 +1,6 @@
 import React from 'react';
 import { AriaButtonProps, mergeProps, useButton, useFocusRing, useHover } from 'react-aria';
-import { mergeRefs } from '../utils.ts';
+import { mergeRefs } from '../../utils.ts';
 
 export interface ButtonBaseProps extends AriaButtonProps {
   className?: string;

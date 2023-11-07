@@ -1,9 +1,8 @@
 import { Meta, StoryObj } from '@storybook/react';
-import { Spinner } from './Spinner.tsx';
+import { SpinnerIcon } from './SpinnerIcon.tsx';
 
-const meta: Meta<typeof Spinner> = {
-  title: 'Components/Icons/Spinner',
-  component: Spinner,
+const meta: Meta<typeof SpinnerIcon> = {
+  component: SpinnerIcon,
 };
 
 export default meta;

@@ -4,7 +4,6 @@ import { Item, Section, Text } from '../ListBox';
 import { ComboBox } from './ComboBox.tsx';
 
 const meta: Meta<typeof ComboBox> = {
-  title: 'Components/Elements/ComboBox',
   component: ComboBox,
   tags: ['autodocs'],
   args: {

@@ -7,7 +7,7 @@ export const buttonVariant = cva(
   [
     'relative transition duration-75', // behavior
     'inline-flex items-center justify-center border px-3 py-2', // layout
-    'rounded-md border-transparent shadow-sm outline-none ring-indigo-500 ring-offset-2', // appearance
+    'rounded-md border-transparent shadow-sm outline-none ring-accent-500 ring-offset-2', // appearance
     'text-sm font-medium leading-4 tracking-tight', // content
     'data-focus-visible:ring-2 data-hovered:shadow', // focused & hovered state
     'data-pressed:scale-[0.99] data-pressed:shadow-sm', // pressed state
@@ -16,25 +16,25 @@ export const buttonVariant = cva(
   {
     variants: {
       intent: {
-        // primary: [
-        //   'bg-indigo-600 text-white',
-        //   'data-hovered:bg-indigo-700',
-        //   'data-disabled:bg-indigo-600/50',
-        // ],
         primary: [
-          'bg-indigo-100 text-indigo-700',
-          'data-hovered:bg-indigo-200',
-          'data-disabled:bg-indigo-100/50 data-disabled:text-indigo-700/50',
+          'bg-accent-600 text-white',
+          'data-hovered:bg-accent-700',
+          'data-disabled:bg-accent-600/50',
         ],
+        // primary: [
+        //   'bg-accent-100 text-accent-700',
+        //   'data-hovered:bg-accent-200',
+        //   'data-disabled:bg-accent-100/50 data-disabled:text-accent-700/50',
+        // ],
         neutral: [
           'border-gray-300 bg-white text-gray-700',
           'data-hovered:bg-gray-50',
           'data-disabled:border-gray-300/50 data-disabled:text-gray-700/50',
         ],
         destructive: [
-          'bg-red-600 text-white ring-red-500',
-          'data-hovered:bg-red-700',
-          'data-disabled:bg-red-600/50',
+          'bg-warning-600 text-white ring-warning-500',
+          'data-hovered:bg-warning-700',
+          'data-disabled:bg-warning-600/50',
         ],
       },
     },

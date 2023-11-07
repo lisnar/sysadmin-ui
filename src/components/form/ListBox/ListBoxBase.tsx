@@ -8,7 +8,7 @@ import {
 } from 'react-aria';
 import { ListState, Node } from 'react-stately';
 import { FilterProps } from '../../types.ts';
-import { mergeRefs } from '../utils.ts';
+import { mergeRefs } from '../../utils.ts';
 
 export { Item, Section } from 'react-stately';
 

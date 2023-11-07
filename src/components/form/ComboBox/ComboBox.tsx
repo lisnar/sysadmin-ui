@@ -2,16 +2,16 @@
 import React from 'react';
 import { AriaComboBoxProps, useComboBox, useFilter } from 'react-aria';
 import { ComboBoxState, useComboBoxState } from 'react-stately';
+import { ButtonBase } from '../../elements/Button';
 import { ExclamationSolidIcon, SelectorIcon } from '../../icons';
-import { ButtonBase } from '../Button';
+import { classNames } from '../../utils.ts';
 import { ListBoxInner } from '../ListBox';
 import {
   fieldContainerStyle,
   fieldHelperTextVariant,
   fieldInputStyle,
   fieldLabelStyle,
-} from '../TextField/style.ts';
-import { classNames } from '../utils.ts';
+} from '../style.ts';
 import { Popover } from './Popover.tsx';
 
 export function ComboBox<T extends object>(props: AriaComboBoxProps<T>) {

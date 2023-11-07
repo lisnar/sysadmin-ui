@@ -1,13 +1,12 @@
 import { Meta, StoryObj } from '@storybook/react';
-import { TextField } from './TextField.tsx';
+import { NumberField } from './NumberField.tsx';
 
-const meta: Meta<typeof TextField> = {
-  title: 'Components/Elements/TextField',
-  component: TextField,
+const meta: Meta<typeof NumberField> = {
+  component: NumberField,
   tags: ['autodocs'],
   args: {
-    label: 'Email',
-    placeholder: 'e.g. lorem.ipsum@dolor.sit',
+    label: 'Number',
+    placeholder: '0',
     description: '',
     errorMessage: '',
     isDisabled: false,
