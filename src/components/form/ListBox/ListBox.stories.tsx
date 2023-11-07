@@ -4,7 +4,6 @@ import { ListBox } from './ListBox.tsx';
 import { Item, Section, Text } from './ListBoxBase.tsx';
 
 const meta: Meta<typeof ListBox> = {
-  title: 'Components/Elements/ListBox',
   component: ListBox,
   tags: ['autodocs'],
   args: {},

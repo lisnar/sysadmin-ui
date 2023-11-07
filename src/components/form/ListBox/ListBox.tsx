@@ -3,7 +3,7 @@ import { AriaListBoxProps } from 'react-aria';
 import { useListState } from 'react-stately';
 import { twMerge } from 'tailwind-merge';
 import { CheckIcon } from '../../icons';
-import { classNames } from '../utils.ts';
+import { classNames } from '../../utils.ts';
 import { ListBoxBase, ListBoxBaseProps, PropsWithListNode } from './ListBoxBase.tsx';
 
 interface ListBoxInnerProps extends Omit<ListBoxBaseProps, 'children' | 'label'> {
@@ -62,7 +62,7 @@ function ListBoxItem({ node }: PropsWithListNode) {
       node={node}
       className={classNames(
         'relative py-2 pl-3 pr-9 text-sm', // layout
-        'outline-none data-focused:bg-indigo-600 data-focused:text-white', // focused state
+        'data-focused:bg-indigo-600 outline-none data-focused:text-white', // focused state
         'data-disabled:pointer-events-none data-disabled:text-gray-400', // disabled state
       )}
     >

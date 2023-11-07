@@ -1,6 +1,6 @@
 import { twMerge } from 'tailwind-merge';
-import { Spinner } from '../../icons';
-import { classNames } from '../utils.ts';
+import { SpinnerIcon } from '../../icons';
+import { classNames } from '../../utils.ts';
 import { ButtonBase, ButtonBaseProps } from './ButtonBase.tsx';
 import { ButtonVariantProps, buttonVariant } from './style.ts';
 
@@ -13,7 +13,7 @@ export interface ButtonProps extends ButtonBaseProps, ButtonVariantProps {
 export function Button({ children, className, intent, isLoading, ...props }: ButtonProps) {
   return (
     <ButtonBase {...props} className={twMerge(buttonVariant({ intent, className }))}>
-      {isLoading && <Spinner size="sm" className="absolute" />}
+      {isLoading && <SpinnerIcon size="sm" className="absolute" />}
       <span className={classNames('transition', isLoading && 'opacity-0')}>{children}</span>
     </ButtonBase>
   );
