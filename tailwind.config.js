@@ -17,6 +17,7 @@ export default {
       'pressed': 'pressed=true',
       'invalid': 'invalid=true',
       'disabled': 'disabled=true',
+      'selected': 'selected=true',
     },
     colors: {
       // single colors

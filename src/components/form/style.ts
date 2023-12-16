@@ -2,7 +2,7 @@ import { cva, VariantProps } from 'class-variance-authority';
 import { NonNullProps } from '../types.ts';
 import { classNames } from '../utils.ts';
 
-export const fieldContainerStyle = 'relative flex w-64 flex-col';
+export const fieldContainerStyle = 'relative inline-flex w-64 flex-col';
 export const fieldLabelStyle =
   'absolute -top-2 left-2 text-gray-900 -mt-px rounded bg-white px-1 text-xs font-medium';
 export const fieldInputStyle = classNames(
