@@ -3,9 +3,9 @@ import React from 'react';
 import { AriaComboBoxProps, useComboBox, useFilter } from 'react-aria';
 import { ComboBoxState, useComboBoxState } from 'react-stately';
 import { ButtonBase } from '../../elements/Button';
+import { ListBoxInner } from '../../elements/ListBox';
 import { ExclamationSolidIcon, SelectorIcon } from '../../icons';
 import { classNames } from '../../utils.ts';
-import { ListBoxInner } from '../ListBox';
 import {
   fieldContainerStyle,
   fieldHelperTextVariant,

@@ -1,6 +1,6 @@
 import { Meta, StoryObj } from '@storybook/react';
 import { useListData, useTreeData } from 'react-stately';
-import { Item, Section, Text } from '../ListBox';
+import { Item, Section, Text } from '../../elements/ListBox';
 import { ComboBox } from './ComboBox.tsx';
 
 const meta: Meta<typeof ComboBox> = {
