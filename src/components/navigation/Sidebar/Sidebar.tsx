@@ -29,9 +29,9 @@ export function Sidebar<T extends object>(props: SidebarProps<T>) {
         <ListBoxBase.List>
           {(node) =>
             node.type === 'section' ? (
-              <React.Fragment>
+              <React.Fragment key={node.key}>
                 <li role="presentation" className="mx-2 border-t border-accent-200 first:hidden" />
-                <ListBoxBase.Section key={node.key} node={node}>
+                <ListBoxBase.Section node={node}>
                   <ListBoxBase.Label className="sr-only" />
                   <ListBoxBase.List>
                     {(node) => <SidebarItem key={node.key} node={node} />}
@@ -64,6 +64,7 @@ function SidebarItem({ node, icon }: SidebarItemProps) {
             state.isDisabled && 'cursor-not-allowed text-accent-400',
           )}
         >
+          {/* todo: placeholder icon, change later */}
           {icon ?? <SpinnerIcon size="md" aria-hidden="true" />}
           <span className="mt-2 text-xs font-medium">{item}</span>
         </div>

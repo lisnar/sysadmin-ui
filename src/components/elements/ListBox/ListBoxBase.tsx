@@ -18,7 +18,6 @@ export interface ListBoxBaseProps extends AriaListBoxOptions<object> {
 }
 
 interface LabelProps {
-  children?: (item: React.ReactNode) => React.ReactNode;
   className?: string;
 }
 
@@ -41,7 +40,9 @@ interface SectionProps extends PropsWithListNode {
 }
 
 interface ItemProps extends PropsWithListNode {
-  children?: (item: React.ReactNode, state: FilterProps<OptionAria, boolean>) => React.ReactNode;
+  children?:
+    | React.ReactNode
+    | ((item: React.ReactNode, state: FilterProps<OptionAria, boolean>) => React.ReactNode);
   className?: string;
 }
 
@@ -84,19 +85,16 @@ export function ListBoxBase({ children, state, ...props }: ListBoxBaseProps) {
   );
 }
 
-function Label({ children, className }: LabelProps) {
+function Label({ className }: LabelProps) {
   const label = React.useContext(LabelContext);
   if (!label) throw new Error('`Label` component must be a child of `ListBoxBase`.');
+  if (!label.children) return null;
 
-  const ChildComponent = React.useCallback(() => {
-    return children?.(label.children) ?? label.children;
-  }, [label.children]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  return label.children ? (
+  return (
     <span {...label.props} className={className}>
-      <ChildComponent />
+      {label.children}
     </span>
-  ) : null;
+  );
 }
 
 function List(
@@ -156,7 +154,7 @@ function Item({ children, className, node }: ItemProps) {
   const ChildComponent = React.useCallback(
     (optionState: FilterProps<OptionAria, boolean>) => {
       // Item's `node.rendered` is passed from `children` props of react-stately `Item` component.
-      return children?.(node.rendered, optionState) ?? node.rendered;
+      return typeof children === 'function' ? children?.(node.rendered, optionState) : children;
     },
     [node.rendered], // eslint-disable-line react-hooks/exhaustive-deps
   );
