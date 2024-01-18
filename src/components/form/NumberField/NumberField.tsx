@@ -1,7 +1,7 @@
 import { forwardRef, useRef } from 'react';
 import { AriaNumberFieldProps, mergeProps, useFocusRing, useNumberField } from 'react-aria';
 import { useNumberFieldState } from 'react-stately';
-import { ExclamationSolidIcon } from '../../icons';
+import { ExclamationCircleIcon } from '../../icons';
 import { mergeRefs } from '../../utils.ts';
 import {
   fieldContainerStyle,
@@ -51,7 +51,7 @@ export const NumberField = forwardRef<HTMLInputElement, NumberFieldProps>(
         </div>
         {isInvalid && (
           <small {...errorMessageProps} className={fieldHelperTextVariant({ intent: 'error' })}>
-            <ExclamationSolidIcon size="xs" className="mr-0.5" aria-hidden="true" />
+            <ExclamationCircleIcon size="xs" className="mr-0.5" aria-hidden="true" />
             {errorMessage}
           </small>
         )}

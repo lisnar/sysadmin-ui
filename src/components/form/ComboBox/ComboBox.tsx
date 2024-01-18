@@ -4,7 +4,7 @@ import { AriaComboBoxProps, useComboBox, useFilter } from 'react-aria';
 import { ComboBoxState, useComboBoxState } from 'react-stately';
 import { ButtonBase } from '../../elements/Button';
 import { ListBoxInner } from '../../elements/ListBox';
-import { ExclamationSolidIcon, SelectorIcon } from '../../icons';
+import { ExclamationCircleIcon, SelectorIcon } from '../../icons';
 import { classNames } from '../../utils.ts';
 import {
   fieldContainerStyle,
@@ -59,7 +59,7 @@ export function ComboBox<T extends object>(props: AriaComboBoxProps<T>) {
       {/* helper text group */}
       {isInvalid && (
         <small {...errorMessageProps} className={fieldHelperTextVariant({ intent: 'error' })}>
-          <ExclamationSolidIcon size="xs" className="mr-0.5" aria-hidden="true" />
+          <ExclamationCircleIcon size="xs" className="mr-0.5" aria-hidden="true" />
           {errorMessage}
         </small>
       )}
