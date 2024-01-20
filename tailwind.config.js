@@ -1,4 +1,5 @@
 import colors from 'tailwindcss/colors';
+import defaultTheme from 'tailwindcss/defaultTheme';
 
 // Setup TailwindCSS in Vite project with Prettier and Storybook:
 // - https://tailwindcss.com/docs/guides/vite
@@ -32,7 +33,13 @@ export default {
       success: colors.emerald,
       warning: colors.rose,
     },
-    extend: {},
+    extend: {
+      fontFamily: {
+        // Setup Inter font:
+        // https://tailwindui.com/documentation#optional-add-the-inter-font-family
+        sans: ['InterVariable', ...defaultTheme.fontFamily.sans],
+      },
+    },
   },
   plugins: [require('@tailwindcss/forms')],
   darkMode: 'class', // required for Storybook dark mode support (see `.storybook/preview.ts`)
