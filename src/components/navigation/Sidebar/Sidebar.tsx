@@ -1,25 +1,70 @@
 import React from 'react';
 import { AriaListBoxProps } from 'react-aria';
-import { useListState } from 'react-stately';
+import { useListState, useTreeData } from 'react-stately';
 import { twMerge } from 'tailwind-merge';
-import { ListBoxBase, PropsWithListNode } from '../../elements/ListBox';
-import { SpinnerIcon } from '../../icons';
+import { Item, ListBoxBase, PropsWithListNode, Section, Text } from '../../elements/ListBox';
 
-type SidebarProps<T extends object> = Omit<
+export interface SidebarEntity {
+  id: number;
+  name: string;
+  icon?: React.ReactNode;
+  children?: SidebarEntity[];
+}
+
+interface SidebarProps {
+  data: SidebarEntity[];
+  selectedId?: number;
+}
+
+type SidebarInnerProps<T extends object> = Omit<
   AriaListBoxProps<T>,
   'disallowEmptySelection' | 'selectionMode'
 >;
 
-interface SidebarItemProps extends PropsWithListNode {
-  icon?: React.ReactSVGElement;
+export function Sidebar({ data, selectedId }: SidebarProps) {
+  const tree = useTreeData<SidebarEntity>({
+    initialItems: data,
+    initialSelectedKeys: [String(selectedId)],
+    getKey: (item) => item.id,
+    getChildren: (item) => item.children ?? [],
+  });
+
+  return (
+    <SidebarInner
+      label="Sidebar"
+      items={tree.items}
+      selectedKeys={tree.selectedKeys}
+      onSelectionChange={(keys) => keys !== 'all' && tree.setSelectedKeys(keys)}
+    >
+      {(node) =>
+        node.value.children ? (
+          <Section key={node.key} title={node.value.name} items={node.children}>
+            {(node) => (
+              <Item key={node.key}>
+                <div className="text-blue-600 h-5 w-5">{node.value.icon}</div>
+                <span className="mt-2 text-xs font-medium">{node.value.name}</span>
+              </Item>
+            )}
+          </Section>
+        ) : (
+          <Item key={node.key}>
+            <div className="text-blue-600 h-5 w-5">{node.value.icon}</div>
+            <Text slot="label" className="mt-2 text-xs font-medium">
+              {node.value.name}
+            </Text>
+          </Item>
+        )
+      }
+    </SidebarInner>
+  );
 }
 
-export function Sidebar<T extends object>(props: SidebarProps<T>) {
+export function SidebarInner<T extends object>(props: SidebarInnerProps<T>) {
   const state = useListState({ ...props, disallowEmptySelection: true, selectionMode: 'single' });
 
   return (
     <div className="w-24 flex-none cursor-default select-none overflow-y-auto bg-accent-700">
-      <ListBoxBase {...props} state={state} shouldFocusOnHover>
+      <ListBoxBase {...props} state={state} shouldFocusOnHover shouldFocusWrap>
         {/* sidebar icon */}
         <div className="w-full text-center">
           <ListBoxBase.Label className="font-black leading-10 text-accent-200" />
@@ -30,9 +75,12 @@ export function Sidebar<T extends object>(props: SidebarProps<T>) {
           {(node) =>
             node.type === 'section' ? (
               <React.Fragment key={node.key}>
-                <li role="presentation" className="mx-2 border-t border-accent-200 first:hidden" />
-                <ListBoxBase.Section node={node}>
-                  <ListBoxBase.Label className="sr-only" />
+                <li
+                  role="presentation"
+                  className="mx-2 mt-0.5 border-t border-accent-200 first:hidden"
+                />
+                <ListBoxBase.Section node={node} className="text-center">
+                  <ListBoxBase.Label className="text-xs font-bold uppercase text-accent-300" />
                   <ListBoxBase.List>
                     {(node) => <SidebarItem key={node.key} node={node} />}
                   </ListBoxBase.List>
@@ -48,11 +96,11 @@ export function Sidebar<T extends object>(props: SidebarProps<T>) {
   );
 }
 
-function SidebarItem({ node, icon }: SidebarItemProps) {
+function SidebarItem({ node }: PropsWithListNode) {
   return (
     <ListBoxBase.Item
       node={node}
-      className="relative px-1 py-0.5 text-sm text-accent-300 outline-none first:pt-1 last:pb-1"
+      className="group relative px-1 py-0.5 text-sm text-accent-300 outline-none first:pt-1 last:pb-1"
     >
       {(item, state) => (
         <div
@@ -64,9 +112,7 @@ function SidebarItem({ node, icon }: SidebarItemProps) {
             state.isDisabled && 'cursor-not-allowed text-accent-400',
           )}
         >
-          {/* todo: placeholder icon, change later */}
-          {icon ?? <SpinnerIcon size="md" aria-hidden="true" />}
-          <span className="mt-2 text-xs font-medium">{item}</span>
+          {item}
         </div>
       )}
     </ListBoxBase.Item>
