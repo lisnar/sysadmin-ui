@@ -27,7 +27,7 @@ interface Entity {
   children?: Entity[];
 }
 
-const animals = ['Lion', 'Elephant', 'Tiger', 'Giraffe', 'Disabled Kangaroo', 'Zebra', 'Panda', 'Hippopotamus', 'Koala', 'Leopard', 'Rhinoceros', 'Cheetah', 'Penguin', 'Gorilla', 'Polar Bear', 'Ostrich', 'Puma', 'Camel', 'Dolphin', 'Octopus', 'Toucan', 'Lemur', 'Flamingo', 'Orangutan', 'Pangolin', 'Armadillo', 'Sloth', 'Peacock', 'Seahorse', 'Jaguar', 'Hedgehog', 'Kangaroo', 'Capybara', 'Otter', 'Platypus', 'Raccoon', 'Vulture'] // prettier-ignore
+const animals = ['Lion', 'Elephant', 'Tiger', 'Giraffe', 'Kangaroo', 'Zebra', 'Panda', 'Hippopotamus', 'Koala', 'Leopard', 'Rhinoceros', 'Cheetah', 'Penguin', 'Gorilla', 'Polar Bear', 'Ostrich', 'Puma', 'Camel', 'Dolphin', 'Octopus', 'Toucan', 'Lemur', 'Flamingo', 'Orangutan', 'Pangolin', 'Armadillo', 'Sloth', 'Peacock', 'Seahorse', 'Jaguar', 'Hedgehog', 'Capybara', 'Otter', 'Platypus', 'Raccoon', 'Vulture'] // prettier-ignore
 const people = ['Alice', 'Bob', 'Charlie', 'David', 'Emma', 'Frank', 'Grace', 'Henry', 'Isabel', 'Jack', 'Katherine', 'Liam', 'Mia', 'Nathan', 'Olivia', 'Peter', 'Quinn', 'Rachel', 'Samuel', 'Taylor', 'Ursula', 'Vincent', 'Wendy', 'Xander', 'Yvonne', 'Zachary', 'Sophia', 'Michael', 'Ava', 'James', 'Elizabeth', 'Daniel', 'Ella', 'William', 'Chloe', 'Ethan', 'Matthew', 'Emily', 'Benjamin', 'Oliver', 'Lily', 'Joseph', 'Abigail', 'John', 'Natalie', 'Noah', 'Avery']; // prettier-ignore
 const states = ['Alabama', 'Alaska', 'American Samoa', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'District of Columbia', 'Florida', 'Georgia', 'Guam', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota', 'Northern Marianas Islands', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Puerto Rico', 'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Virgin Islands', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming']; // prettier-ignore
 
@@ -89,7 +89,11 @@ export const ControlledTree: Story = {
     });
 
     return (
-      <ComboBox label="People and Animals" defaultItems={tree.items}>
+      <ComboBox
+        label="People and Animals"
+        defaultItems={tree.items}
+        disabledKeys={['1002', '1007', '2004']}
+      >
         {(node) => (
           <Section key={node.key} title={node.value.name} items={node.children}>
             {(node) => (
