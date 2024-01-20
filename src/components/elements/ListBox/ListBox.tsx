@@ -33,9 +33,9 @@ export const ListBoxInner = React.forwardRef<HTMLUListElement, ListBoxInnerProps
       >
         {(node) =>
           node.type === 'section' ? (
-            <React.Fragment>
+            <React.Fragment key={node.key}>
               <li role="presentation" className="mx-2 my-1 border-t border-gray-300 first:hidden" />
-              <ListBoxBase.Section key={node.key} node={node}>
+              <ListBoxBase.Section node={node}>
                 <ListBoxBase.Label className="mx-3 text-xs font-bold uppercase text-gray-500" />
                 <ListBoxBase.List>
                   {(node) => <ListBoxItem key={node.key} node={node} />}
@@ -61,26 +61,17 @@ function ListBoxItem({ node }: PropsWithListNode) {
     <ListBoxBase.Item
       node={node}
       className={classNames(
-        'relative py-2 pl-3 pr-9 text-sm text-gray-900', // layout
+        'group relative py-2 pl-3 pr-9 text-sm text-gray-900',
         'outline-none data-focused:bg-accent-600 data-focused:text-white', // focused state
         'data-disabled:pointer-events-none data-disabled:text-gray-400', // disabled state
       )}
     >
-      {(item, state) => (
-        <React.Fragment>
-          {item}
-          {state.isSelected && (
-            <CheckIcon
-              size="sm"
-              className={classNames(
-                'absolute right-3 top-1/2 -translate-y-1/2',
-                state.isFocused ? 'text-white' : 'text-accent-600',
-              )}
-              aria-hidden="true"
-            />
-          )}
-        </React.Fragment>
-      )}
+      {node.rendered}
+      <CheckIcon
+        size="sm"
+        className="absolute right-3 top-1/2 hidden -translate-y-1/2 text-accent-600 group-data-focused:text-white group-data-selected:block"
+        aria-hidden="true"
+      />
     </ListBoxBase.Item>
   );
 }

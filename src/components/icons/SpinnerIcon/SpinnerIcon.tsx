@@ -7,11 +7,10 @@ export function SpinnerIcon({ className, size, ...props }: IconProps) {
     <>
       {/* SVG taken from https://github.com/n3r4zzurr0/svg-spinners */}
       <svg
-        {...props}
-        className={twMerge(iconClassVariants({ size, className }))}
-        xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 24 24"
         fill="currentColor"
+        className={twMerge(iconClassVariants({ size, className }))}
+        {...props}
       >
         <path
           className="origin-center opacity-25"
