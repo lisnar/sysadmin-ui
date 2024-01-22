@@ -3,9 +3,9 @@ import React from 'react';
 import { AriaComboBoxProps, useComboBox, useFilter } from 'react-aria';
 import { ComboBoxState, useComboBoxState } from 'react-stately';
 import { ButtonBase } from '../../elements/Button';
-import { ListBoxInner } from '../../elements/ListBox';
 import { ExclamationCircleIcon, SelectorIcon } from '../../icons';
 import { classNames } from '../../utils.ts';
+import { ListBoxBase } from '../ListBox';
 import {
   fieldContainerStyle,
   fieldHelperTextVariant,
@@ -76,15 +76,10 @@ export function ComboBox<T extends object>(props: AriaComboBoxProps<T>) {
           triggerRef={inputRef}
           state={state}
           placement="bottom"
-          className="mb-4 mt-1.5"
+          className="mb-4 mt-1.5 flex"
           isNonModal
         >
-          <ListBoxInner
-            {...listBoxProps}
-            ref={listBoxRef}
-            state={state}
-            className="max-h-60 w-64 shadow-lg"
-          />
+          <ListBoxBase {...listBoxProps} ref={listBoxRef} state={state} />
         </Popover>
       )}
     </div>
