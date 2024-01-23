@@ -3,7 +3,7 @@ import { AriaListBoxOptions, useListBox, useListBoxSection, useOption } from 're
 import { ListState, Node } from 'react-stately';
 import { twMerge } from 'tailwind-merge';
 import { CheckIcon } from '../../icons';
-import { classNames, mergeRefs } from '../../utils.ts';
+import { mergeRefs } from '../../utils.ts';
 import { fieldContainerStyle, fieldInputStyle, fieldLabelStyle } from '../style.ts';
 
 interface ListBoxBaseProps<T extends object> extends AriaListBoxOptions<T> {
@@ -27,7 +27,7 @@ export const ListBoxBase = React.forwardRef(function ListBoxBase<T extends objec
     <div className={twMerge(fieldContainerStyle, className)}>
       {/* listbox label (optional) */}
       {props.label && (
-        <span {...labelProps} className={classNames(fieldLabelStyle, 'relative -top-1')}>
+        <span {...labelProps} className={twMerge(fieldLabelStyle, 'relative -top-1')}>
           {props.label}
         </span>
       )}
@@ -35,8 +35,7 @@ export const ListBoxBase = React.forwardRef(function ListBoxBase<T extends objec
       <ul
         {...listBoxProps}
         ref={mergeRefs(listRef, forwardedRef)}
-        className={classNames(fieldInputStyle, 'overflow-auto py-1')}
-        data-focused={state.selectionManager.isFocused || undefined}
+        className={twMerge(fieldInputStyle, 'overflow-auto py-1')}
       >
         {[...state.collection].map((node) =>
           node.type === 'section' ? (
