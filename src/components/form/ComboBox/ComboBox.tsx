@@ -1,11 +1,10 @@
-/* eslint-disable @typescript-eslint/unbound-method */
 import React from 'react';
 import { AriaComboBoxProps, useComboBox, useFilter } from 'react-aria';
-import { ComboBoxState, useComboBoxState } from 'react-stately';
+import { ComboBoxState, Item, Section, useComboBoxState, useTreeData } from 'react-stately';
 import { ButtonBase } from '../../elements/Button';
 import { ExclamationCircleIcon, SelectorIcon } from '../../icons';
 import { classNames } from '../../utils.ts';
-import { ListBoxBase } from '../ListBox';
+import { ListBoxBase, Option } from '../ListBox';
 import {
   fieldContainerStyle,
   fieldHelperTextVariant,
@@ -14,8 +13,41 @@ import {
 } from '../style.ts';
 import { Popover } from './Popover.tsx';
 
-export function ComboBox<T extends object>(props: AriaComboBoxProps<T>) {
-  const { contains } = useFilter({ sensitivity: 'base' });
+export interface ComboBoxProps
+  extends Omit<
+    AriaComboBoxProps<Option>,
+    'children' | 'defaultItems' | 'items' | 'onSelectionChange'
+  > {
+  options: Option[];
+  selectedKey?: string; // exclude "all" value
+  onSelectionChange: (key: string) => void;
+}
+
+export function ComboBox({ options, onSelectionChange, ...props }: ComboBoxProps) {
+  const data = useTreeData<Option>({
+    initialItems: options,
+    getKey: (item) => item.key,
+    getChildren: (item) => item.children ?? [],
+  });
+
+  return (
+    <ComboBoxAria
+      defaultItems={data.items}
+      onSelectionChange={(key) => onSelectionChange?.(key as string)}
+      {...props}
+    >
+      {/* todo: handle `node.value.description` */}
+      {(node) => (
+        <Section key={node.key} title={node.value.label} items={node.children}>
+          {(node) => <Item key={node.key}>{node.value.label ?? node.value.key}</Item>}
+        </Section>
+      )}
+    </ComboBoxAria>
+  );
+}
+
+export function ComboBoxAria<T extends object>(props: AriaComboBoxProps<T>) {
+  const { contains } = useFilter({ sensitivity: 'base' }); // eslint-disable-line @typescript-eslint/unbound-method
   const state = useComboBoxState({ ...props, defaultFilter: contains, menuTrigger: 'focus' });
   useAutoFocusOption(state);
 
@@ -76,7 +108,7 @@ export function ComboBox<T extends object>(props: AriaComboBoxProps<T>) {
           triggerRef={inputRef}
           state={state}
           placement="bottom"
-          className="mb-4 mt-1.5 flex"
+          className="mb-3 mt-1.5 flex"
           isNonModal
         >
           <ListBoxBase {...listBoxProps} ref={listBoxRef} state={state} />

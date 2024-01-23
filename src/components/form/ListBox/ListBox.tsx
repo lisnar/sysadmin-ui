@@ -1,4 +1,4 @@
-import { AriaListBoxOptions, AriaListBoxProps } from 'react-aria';
+import { AriaListBoxProps } from 'react-aria';
 import { Item, Section, useListState, useTreeData } from 'react-stately';
 import { ListBoxBase } from './ListBoxBase.tsx';
 
@@ -10,23 +10,23 @@ export interface Option {
 }
 
 export interface ListBoxProps
-  extends Omit<AriaListBoxOptions<Option>, 'items' | 'selectedKeys' | 'onSelectionChange'> {
+  extends Omit<AriaListBoxProps<Option>, 'children' | 'items' | 'onSelectionChange'> {
   options: Option[];
-  initialSelectedKeys?: Iterable<string>;
+  defaultSelectedKeys?: Iterable<string>;
   selectedKeys?: Iterable<string>; // exclude "all" value
   onSelectionChange?: (keys: Iterable<string>) => void;
 }
 
 export function ListBox({
   options,
-  initialSelectedKeys,
+  defaultSelectedKeys,
   selectedKeys,
   onSelectionChange,
   ...props
 }: ListBoxProps) {
   const data = useTreeData<Option>({
     initialItems: options,
-    initialSelectedKeys: initialSelectedKeys,
+    initialSelectedKeys: defaultSelectedKeys,
     getKey: (item) => item.key,
     getChildren: (item) => item.children ?? [],
   });
