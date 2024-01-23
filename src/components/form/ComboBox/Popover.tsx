@@ -1,12 +1,12 @@
-import { ReactNode, RefObject } from 'react';
+import React from 'react';
 import { AriaPopoverProps, DismissButton, Overlay, usePopover } from 'react-aria';
 import { OverlayTriggerState } from 'react-stately';
 import { twMerge } from 'tailwind-merge';
 
 interface PopoverProps extends AriaPopoverProps {
-  children: ReactNode;
+  children: React.ReactNode;
   className?: string;
-  popoverRef: RefObject<HTMLDivElement>;
+  popoverRef: React.RefObject<HTMLDivElement>;
   state: OverlayTriggerState;
 }
 

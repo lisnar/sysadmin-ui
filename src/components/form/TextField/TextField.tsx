@@ -1,4 +1,4 @@
-import { forwardRef, useRef } from 'react';
+import React from 'react';
 import { AriaTextFieldProps, mergeProps, useFocusRing, useTextField } from 'react-aria';
 import { ExclamationCircleIcon } from '../../icons';
 import { mergeRefs } from '../../utils.ts';
@@ -9,8 +9,11 @@ import {
   fieldLabelStyle,
 } from '../style.ts';
 
-export const TextField = forwardRef<HTMLInputElement, AriaTextFieldProps>((props, forwardedRef) => {
-  const ref = useRef<HTMLInputElement>(null);
+export const TextField = React.forwardRef(function TextField(
+  props: AriaTextFieldProps,
+  forwardedRef: React.ForwardedRef<HTMLInputElement>,
+) {
+  const ref = React.useRef<HTMLInputElement>(null);
 
   const { inputProps, labelProps, descriptionProps, errorMessageProps } = useTextField(props, ref);
   const { focusProps, isFocused } = useFocusRing(props);
@@ -46,8 +49,3 @@ export const TextField = forwardRef<HTMLInputElement, AriaTextFieldProps>((props
     </div>
   );
 });
-
-// Required by eslint rule (react/display-name).
-// https://github.com/jsx-eslint/eslint-plugin-react/blob/master/docs/rules/display-name.md
-// Display name was missing because the component is an anonymous function `(props, ref) => ...`.
-TextField.displayName = 'TextField';

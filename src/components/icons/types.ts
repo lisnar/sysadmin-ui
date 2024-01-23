@@ -1,6 +1,6 @@
-import { ComponentProps } from 'react';
+import React from 'react';
 import { IconVariantProps } from './style.ts';
 
-export interface IconProps extends ComponentProps<'svg'>, IconVariantProps {
+export interface IconProps extends React.ComponentProps<'svg'>, IconVariantProps {
   className?: string;
 }

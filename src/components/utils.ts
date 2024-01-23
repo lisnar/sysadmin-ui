@@ -1,10 +1,10 @@
-import type { ForwardedRef, RefCallback } from 'react';
+import React from 'react';
 
 /**
  * Merge multiple refs into one. Works with callback and object refs.
  * https://mayursinhsarvaiya.medium.com/how-to-merge-refs-in-react-component-d5e4623b6924
  */
-export function mergeRefs<T = unknown>(...refs: ForwardedRef<T>[]): RefCallback<T> {
+export function mergeRefs<T = unknown>(...refs: React.ForwardedRef<T>[]): React.RefCallback<T> {
   return function (node: T) {
     for (const ref of refs) {
       if (!ref) continue;
