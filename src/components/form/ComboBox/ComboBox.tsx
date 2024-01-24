@@ -13,9 +13,13 @@ import {
 } from '../style.ts';
 import { Popover } from './Popover.tsx';
 
+export interface ComboBoxAriaProps<T extends object> extends AriaComboBoxProps<T> {
+  errorMessage?: React.ReactNode;
+}
+
 export interface ComboBoxProps
   extends Omit<
-    AriaComboBoxProps<Option>,
+    ComboBoxAriaProps<Option>,
     'children' | 'defaultItems' | 'items' | 'onSelectionChange'
   > {
   options: Option[];
@@ -46,7 +50,7 @@ export function ComboBox({ options, onSelectionChange, ...props }: ComboBoxProps
   );
 }
 
-export function ComboBoxAria<T extends object>(props: AriaComboBoxProps<T>) {
+export function ComboBoxAria<T extends object>(props: ComboBoxAriaProps<T>) {
   const { contains } = useFilter({ sensitivity: 'base' }); // eslint-disable-line @typescript-eslint/unbound-method
   const state = useComboBoxState({ ...props, defaultFilter: contains, menuTrigger: 'focus' });
   useAutoFocusOption(state);

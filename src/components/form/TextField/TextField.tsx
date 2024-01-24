@@ -9,8 +9,12 @@ import {
   fieldLabelStyle,
 } from '../style.ts';
 
+interface TextFieldProps extends AriaTextFieldProps {
+  errorMessage?: React.ReactNode;
+}
+
 export const TextField = React.forwardRef(function TextField(
-  props: AriaTextFieldProps,
+  props: TextFieldProps,
   forwardedRef: React.ForwardedRef<HTMLInputElement>,
 ) {
   const ref = React.useRef<HTMLInputElement>(null);

@@ -12,6 +12,7 @@ import {
 
 interface NumberFieldProps extends AriaNumberFieldProps {
   locale?: string;
+  errorMessage?: React.ReactNode;
 }
 
 export const NumberField = React.forwardRef(function NumberField(
