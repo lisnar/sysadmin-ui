@@ -16,6 +16,16 @@ interface ListBoxItemProps<T extends object> {
   state: ListState<T>;
 }
 
+interface TextProps {
+  children: string;
+  className?: string;
+  slot: 'label' | 'description';
+}
+
+const TextContext = React.createContext<{
+  props: Record<TextProps['slot'], React.ComponentPropsWithoutRef<'span'>>;
+} | null>(null);
+
 export const ListBoxBase = React.forwardRef(function ListBoxBase<T extends object>(
   { className, state, ...props }: ListBoxBaseProps<T>,
   forwardedRef: React.ForwardedRef<HTMLUListElement>,
@@ -82,7 +92,7 @@ function OptionGroup<T extends object>({ node, state }: ListBoxItemProps<T>) {
 function Option<T extends object>({ node, state }: ListBoxItemProps<T>) {
   const itemRef = React.useRef<HTMLLIElement>(null);
   const option = useOption({ key: node.key }, state, itemRef);
-  const { optionProps, isSelected, isFocused, isDisabled } = option;
+  const { optionProps, labelProps, descriptionProps, isSelected, isFocused, isDisabled } = option;
 
   return (
     <li
@@ -95,7 +105,9 @@ function Option<T extends object>({ node, state }: ListBoxItemProps<T>) {
       data-disabled={isDisabled || undefined}
     >
       {/* displayed text */}
-      {node.rendered}
+      <TextContext.Provider value={{ props: { label: labelProps, description: descriptionProps } }}>
+        {node.rendered}
+      </TextContext.Provider>
       {/* selection mark */}
       {isSelected && (
         <CheckIcon
@@ -106,4 +118,11 @@ function Option<T extends object>({ node, state }: ListBoxItemProps<T>) {
       )}
     </li>
   );
+}
+
+export function Text({ slot, ...props }: TextProps) {
+  const text = React.useContext(TextContext);
+  // Children of `Item` will be rendered as `node.rendered` in `ListBoxBase.Item`.
+  if (!text) throw new Error('`Text` component must be a child of `Item`.');
+  return <span {...text.props[slot]} {...props} />;
 }

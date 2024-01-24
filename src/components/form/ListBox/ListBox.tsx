@@ -1,9 +1,12 @@
+import React from 'react';
 import { AriaListBoxProps } from 'react-aria';
-import { Item, Section, useListState, useTreeData } from 'react-stately';
+import { Section, useListState, useTreeData } from 'react-stately';
 import { ListBoxBase } from './ListBoxBase.tsx';
+import { renderOption } from './renderOption.tsx';
 
 export interface Option {
   key: string; // `selectedKeys` and `disabledKeys` don't work with number elements
+  icon?: React.ReactNode;
   label?: string;
   description?: string;
   children?: Option[];
@@ -38,10 +41,9 @@ export function ListBox({
       onSelectionChange={(keys) => (onSelectionChange ?? data.setSelectedKeys)(keys as Set<string>)}
       {...props}
     >
-      {/* todo: handle `node.value.description` */}
       {(node) => (
         <Section key={node.key} title={node.value.label} items={node.children}>
-          {(node) => <Item key={node.key}>{node.value.label ?? node.value.key}</Item>}
+          {(node) => renderOption(node.key, node.value)}
         </Section>
       )}
     </ListBoxAria>

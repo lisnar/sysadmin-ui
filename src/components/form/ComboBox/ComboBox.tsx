@@ -1,10 +1,10 @@
 import React from 'react';
 import { AriaComboBoxProps, useComboBox, useFilter } from 'react-aria';
-import { ComboBoxState, Item, Section, useComboBoxState, useTreeData } from 'react-stately';
+import { ComboBoxState, Section, useComboBoxState, useTreeData } from 'react-stately';
 import { ButtonBase } from '../../elements/Button';
 import { ExclamationCircleIcon, SelectorIcon } from '../../icons';
 import { classNames } from '../../utils.ts';
-import { ListBoxBase, Option } from '../ListBox';
+import { ListBoxBase, Option, renderOption } from '../ListBox';
 import {
   fieldContainerStyle,
   fieldHelperTextVariant,
@@ -40,10 +40,9 @@ export function ComboBox({ options, onSelectionChange, ...props }: ComboBoxProps
       onSelectionChange={(key) => onSelectionChange?.(key as string)}
       {...props}
     >
-      {/* todo: handle `node.value.description` */}
       {(node) => (
         <Section key={node.key} title={node.value.label} items={node.children}>
-          {(node) => <Item key={node.key}>{node.value.label ?? node.value.key}</Item>}
+          {(node) => renderOption(node.key, node.value)}
         </Section>
       )}
     </ComboBoxAria>
