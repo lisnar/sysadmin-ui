@@ -23,6 +23,8 @@ interface TableSelectAllCellProps<T> extends Pick<AriaTableColumnHeaderProps<T>,
 
 export function TableCheckboxCell<T>({ node, state, resizeState }: TableCheckboxCellProps<T>) {
   const ref = React.useRef<HTMLDivElement>(null);
+
+  // react-aria
   const { gridCellProps } = useTableCell({ node }, state, ref);
   const { checkboxProps } = useTableSelectionCheckbox({ key: node.parentKey! }, state);
 

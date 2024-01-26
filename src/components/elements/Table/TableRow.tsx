@@ -9,6 +9,8 @@ interface TableRowProps<T> extends Pick<GridRowProps<T>, 'node'> {
 
 export function TableRow<T>({ children, node, state }: TableRowProps<T>) {
   const ref = React.useRef<HTMLDivElement>(null);
+
+  // react-aria
   const { rowProps, isPressed } = useTableRow({ node }, state, ref);
   const { focusProps, isFocusVisible } = useFocusRing();
   const isSelected = state.selectionManager.isSelected(node.key);

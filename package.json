@@ -24,6 +24,9 @@
     "tailwind-merge": "^1.14.0"
   },
   "devDependencies": {
+    "@react-types/grid": "^3.2.3",
+    "@react-types/shared": "^3.22.0",
+    "@react-types/table": "^3.9.2",
     "@storybook/addon-a11y": "^7.6.10",
     "@storybook/addon-essentials": "^7.6.10",
     "@storybook/addon-interactions": "^7.6.10",

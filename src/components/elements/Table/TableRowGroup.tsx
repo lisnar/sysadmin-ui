@@ -12,6 +12,7 @@ export const TableRowGroup = React.forwardRef(function TableRowGroup(
   { type: Element, children, className, onScroll }: TableRowGroupProps,
   forwardedRef: React.ForwardedRef<unknown>,
 ) {
+  // react-aria
   const { rowGroupProps } = useTableRowGroup();
 
   return (

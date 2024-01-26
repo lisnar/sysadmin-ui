@@ -25,6 +25,15 @@ dependencies:
     version: 1.14.0
 
 devDependencies:
+  '@react-types/grid':
+    specifier: ^3.2.3
+    version: 3.2.3(react@18.2.0)
+  '@react-types/shared':
+    specifier: ^3.22.0
+    version: 3.22.0(react@18.2.0)
+  '@react-types/table':
+    specifier: ^3.9.2
+    version: 3.9.2(react@18.2.0)
   '@storybook/addon-a11y':
     specifier: ^7.6.10
     version: 7.6.10
@@ -3633,7 +3642,6 @@ packages:
     dependencies:
       '@react-types/shared': 3.22.0(react@18.2.0)
       react: 18.2.0
-    dev: false
 
   /@react-types/link@3.5.2(react@18.2.0):
     resolution: {integrity: sha512-/s51/WejmpLiyxOgP89s4txgxYoGaPe8pVDItVo1h4+BhU1Puyvgv/Jx8t9dPvo6LUXbraaN+SgKk/QDxaiirw==}
@@ -3733,7 +3741,6 @@ packages:
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
     dependencies:
       react: 18.2.0
-    dev: false
 
   /@react-types/slider@3.7.0(react@18.2.0):
     resolution: {integrity: sha512-uyQXUVFfqc9SPUW0LZLMan2n232F/OflRafiHXz9viLFa9tVOupVa7GhASRAoHojwkjoJ1LjFlPih7g5dOZ0/Q==}
@@ -3761,7 +3768,6 @@ packages:
       '@react-types/grid': 3.2.3(react@18.2.0)
       '@react-types/shared': 3.22.0(react@18.2.0)
       react: 18.2.0
-    dev: false
 
   /@react-types/tabs@3.3.4(react@18.2.0):
     resolution: {integrity: sha512-4mCTtFrwMRypyGTZCvNYVT9CkknexO/UYvqwDm2jMYb8JgjRvxnomu776Yh7uyiYKWyql2upm20jqasEOm620w==}
