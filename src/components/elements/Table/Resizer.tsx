@@ -12,13 +12,11 @@ import { twMerge } from 'tailwind-merge';
 import { mergeRefs } from '../../utils.ts';
 
 interface ResizerProps<T> extends Omit<AriaTableColumnResizeProps<T>, 'aria-label'> {
-  className?: string;
   resizeState: TableColumnResizeState<T>;
-  showResizer?: boolean;
 }
 
 export const Resizer = React.forwardRef(function Resizer<T>(
-  { className, column, resizeState, showResizer = true, ...props }: ResizerProps<T>,
+  { column, resizeState, ...props }: ResizerProps<T>,
   forwardedRef: React.ForwardedRef<HTMLInputElement>,
 ) {
   const ref = React.useRef<HTMLInputElement>(null);
@@ -31,25 +29,20 @@ export const Resizer = React.forwardRef(function Resizer<T>(
   );
   const { hoverProps, isHovered } = useHover(props);
   const { focusProps, isFocused, isFocusVisible } = useFocusRing();
+  const isResizing = resizeState.resizingColumn === column.key || undefined;
 
   return (
     <div
       {...mergeProps(resizerProps, hoverProps)}
       role="presentation"
-      className={twMerge(
-        resizeState.resizingColumn === column.key
-          ? 'border-[orange]'
-          : isFocused
-            ? 'border-accent-500'
-            : 'border-slate-800',
-        showResizer ? 'visible' : 'hidden',
-        'box-border h-auto w-[6px] flex-[0_0_auto] cursor-col-resize touch-none border-2',
-        className,
-      )}
+      className="absolute inset-y-0 -right-0.5 flex cursor-col-resize justify-center rounded-sm px-1.5 py-1 ring-accent-600 data-focus-visible:ring-2"
       data-hovered={isHovered || undefined}
       data-focused={isFocused || undefined}
       data-focus-visible={isFocusVisible || undefined}
     >
+      <div
+        className={twMerge('rounded border-l border-gray-300', isResizing && 'border-gray-400')}
+      />
       <VisuallyHidden>
         <input
           {...mergeProps(inputProps, focusProps)}

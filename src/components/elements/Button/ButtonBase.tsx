@@ -4,14 +4,16 @@ import { mergeRefs } from '../../utils.ts';
 
 export interface ButtonBaseProps extends AriaButtonProps {
   className?: string;
+  style?: React.CSSProperties;
 }
 
 export const ButtonBase = React.forwardRef(function ButtonBase(
-  { children, className, ...props }: ButtonBaseProps,
+  { children, className, style, ...props }: ButtonBaseProps,
   forwardedRef: React.ForwardedRef<HTMLButtonElement>,
 ) {
   const ref = React.useRef<HTMLButtonElement>(null);
 
+  // react-aria
   const { buttonProps, isPressed } = useButton(props, ref);
   const { hoverProps, isHovered } = useHover(props);
   const { focusProps, isFocused, isFocusVisible } = useFocusRing(props);
@@ -20,6 +22,7 @@ export const ButtonBase = React.forwardRef(function ButtonBase(
     <button
       {...mergeProps(buttonProps, hoverProps, focusProps)}
       ref={mergeRefs(ref, forwardedRef)}
+      style={style}
       className={className}
       // The value of `data-...` attributes will be 'true' or undefined. This will simplify usage of CSS selectors.
       data-pressed={isPressed || undefined}

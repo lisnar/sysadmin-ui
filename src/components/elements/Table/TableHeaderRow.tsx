@@ -8,14 +8,14 @@ interface TableHeaderRowProps<T> extends Pick<GridRowProps<T>, 'node'> {
 }
 
 export function TableHeaderRow<T>({ children, node, state }: TableHeaderRowProps<T>) {
-  const ref = React.useRef<HTMLDivElement>(null);
+  const ref = React.useRef<HTMLTableRowElement>(null);
 
   // react-aria
   const { rowProps } = useTableHeaderRow({ node }, state, ref);
 
   return (
-    <div {...rowProps} ref={ref} className="border-slate-800 flex w-fit border-b-2 border-solid">
+    <tr {...rowProps} ref={ref} className="border-b border-solid border-gray-300 bg-gray-100">
       {children}
-    </div>
+    </tr>
   );
 }

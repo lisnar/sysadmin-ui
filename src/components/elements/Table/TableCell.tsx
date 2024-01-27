@@ -1,31 +1,34 @@
+import { GridNode } from '@react-types/grid';
 import React from 'react';
-import { AriaTableCellProps, mergeProps, useFocusRing, useTableCell } from 'react-aria';
+import { mergeProps, useFocusRing, useTableCell } from 'react-aria';
 import { TableColumnResizeState, TableState } from 'react-stately';
-import { classNames } from '../../utils.ts';
 
-interface TableCellProps<T> extends Pick<AriaTableCellProps, 'node'> {
+interface TableCellProps<T> {
+  cell: GridNode<T>;
   state: TableState<T>;
   resizeState?: TableColumnResizeState<T>;
 }
 
-export function TableCell<T>({ node, state, resizeState }: TableCellProps<T>) {
+export function TableCell<T>({ cell, state, resizeState }: TableCellProps<T>) {
   const ref = React.useRef<HTMLTableCellElement>(null);
 
   // react-aria
-  const { gridCellProps } = useTableCell({ node }, state, ref);
-  const { focusProps, isFocusVisible } = useFocusRing();
+  const { gridCellProps } = useTableCell({ node: cell }, state, ref);
+  const { focusProps, isFocused, isFocusVisible } = useFocusRing();
+
+  const width = resizeState?.getColumnWidth(cell.column!.key);
 
   return (
     <td
       {...mergeProps(gridCellProps, focusProps)}
       ref={ref}
-      className={classNames(
-        isFocusVisible ? 'shadow-[inset_0_0_0_2px_orange]' : 'shadow-none',
-        'box-border flex-[0_0_auto] cursor-default truncate px-2.5 py-1 outline-none',
-      )}
-      style={{ width: resizeState?.getColumnWidth(node.column!.key) }}
+      className="px-2 py-1 text-sm outline-none -outline-offset-4 data-focused:outline-accent-600"
+      data-focused={isFocused || undefined}
+      data-focus-visible={isFocusVisible || undefined}
     >
-      {node.rendered}
+      <div className="truncate" style={{ width }}>
+        {cell.rendered}
+      </div>
     </td>
   );
 }

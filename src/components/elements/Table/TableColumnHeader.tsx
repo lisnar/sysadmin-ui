@@ -1,4 +1,3 @@
-import { GridNode } from '@react-types/grid';
 import { ColumnSize } from '@react-types/table';
 import React from 'react';
 import { AriaTableColumnHeaderProps, useTableColumnHeader } from 'react-aria';
@@ -8,7 +7,6 @@ import { ButtonBase } from '../Button';
 import { Resizer } from './Resizer.tsx';
 
 interface TableColumnHeaderProps<T> extends AriaTableColumnHeaderProps<T> {
-  node: GridNode<T>;
   state: TableState<T>;
   resizeState: TableColumnResizeState<T>;
   onResizeStart?: (widths: Map<React.Key, ColumnSize>) => void;
@@ -34,9 +32,17 @@ export function TableColumnHeader<T>({
   const sortVisible = state.sortDescriptor?.column === node.key ? 'visible' : 'hidden';
 
   return (
-    <th {...columnHeaderProps} ref={ref} style={{ width: resizeState.getColumnWidth(node.key) }}>
-      <div className="relative flex justify-between">
-        <ButtonBase onPress={() => state.sort(node.key)} className="flex-1">
+    <th
+      {...columnHeaderProps}
+      ref={ref}
+      className="sticky top-0 cursor-default whitespace-nowrap p-1 text-left font-bold"
+      style={{ width: resizeState.getColumnWidth(node.key) }}
+    >
+      <div className="relative flex items-center justify-center">
+        <ButtonBase
+          onPress={() => state.sort(node.key)}
+          className="w-full cursor-default truncate rounded-sm p-1 text-left text-xs font-semibold uppercase text-gray-600 ring-accent-600 data-focused:outline-none data-focused:ring-2"
+        >
           <span aria-hidden="true" className={classNames('mr-1', sortVisible)}>
             {sortIcon}
           </span>

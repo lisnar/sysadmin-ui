@@ -8,37 +8,24 @@ interface TableRowProps<T> extends Pick<GridRowProps<T>, 'node'> {
 }
 
 export function TableRow<T>({ children, node, state }: TableRowProps<T>) {
-  const ref = React.useRef<HTMLDivElement>(null);
+  const ref = React.useRef<HTMLTableRowElement>(null);
 
   // react-aria
   const { rowProps, isPressed } = useTableRow({ node }, state, ref);
-  const { focusProps, isFocusVisible } = useFocusRing();
+  const { focusProps, isFocused, isFocusVisible } = useFocusRing();
   const isSelected = state.selectionManager.isSelected(node.key);
 
-  let background;
-  let color;
-  if (isSelected) {
-    color = 'text-white';
-    background = 'bg-violet-800';
-  } else if (isPressed) {
-    background = 'bg-slate-400';
-  } else {
-    if (node.index! % 2) {
-      background = 'bg-slate-200';
-    } else {
-      background = 'none';
-    }
-  }
-
-  const boxShadow = isFocusVisible ? 'shadow-[inset_0_0_0_2px_orange]' : 'shadow-none';
-
   return (
-    <div
+    <tr
       {...mergeProps(rowProps, focusProps)}
       ref={ref}
-      className={`${background} ${color} outline-none ${boxShadow} flex w-fit`}
+      className="group cursor-default outline-none -outline-offset-4 even:bg-gray-100 data-focused:outline-accent-600 data-selected:bg-accent-200"
+      data-pressed={isPressed || undefined}
+      data-selected={isSelected || undefined}
+      data-focused={isFocused || undefined}
+      data-focus-visible={isFocusVisible || undefined}
     >
       {children}
-    </div>
+    </tr>
   );
 }

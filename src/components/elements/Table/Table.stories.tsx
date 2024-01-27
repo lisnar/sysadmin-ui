@@ -85,7 +85,7 @@ export const ResizeableTable: Story = {
     return (
       <Table
         aria-label="Example table with client side sorting"
-        selectionMode="multiple"
+        selectionMode="single"
         sortDescriptor={list.sortDescriptor}
         // eslint-disable-next-line @typescript-eslint/unbound-method
         onSortChange={list.sort}

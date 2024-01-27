@@ -1,9 +1,9 @@
-import React, { ElementType, ReactNode } from 'react';
+import React from 'react';
 import { useTableRowGroup } from 'react-aria';
 
 interface TableRowGroupProps {
-  type: ElementType;
-  children: ReactNode;
+  type: React.ElementType;
+  children: React.ReactNode;
   onScroll?: () => void;
   className?: string;
 }
