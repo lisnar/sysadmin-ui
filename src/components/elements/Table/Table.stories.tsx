@@ -23,34 +23,6 @@ interface Character {
 
 export const ResizeableTable: Story = {
   render: function AsyncSortTable() {
-    // const list = useAsyncList<StarWarsChar>({
-    //   async load({ signal }) {
-    //     const res = await fetch('https://swapi.py4e.com/api/people/?search', {
-    //       signal,
-    //     });
-    //     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    //     const json = await res.json();
-    //     return {
-    //       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    //       items: json.results as Iterable<StarWarsChar>,
-    //     };
-    //   },
-    //   // eslint-disable-next-line @typescript-eslint/require-await
-    //   async sort({ items, sortDescriptor }) {
-    //     return {
-    //       items: items.sort((a, b) => {
-    //         const first = a[sortDescriptor.column as keyof StarWarsChar];
-    //         const second = b[sortDescriptor.column as keyof StarWarsChar];
-    //         let cmp = (parseInt(first, 10) || first) < (parseInt(second, 10) || second) ? -1 : 1;
-    //         if (sortDescriptor.direction === 'descending') {
-    //           cmp *= -1;
-    //         }
-    //         return cmp;
-    //       }),
-    //     };
-    //   },
-    // });
-
     const list = useAsyncList<Character>({
       async load({ signal }) {
         const res = await fetch(`https://swapi.py4e.com/api/people/?search`, {

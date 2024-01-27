@@ -2,6 +2,7 @@ import { GridNode } from '@react-types/grid';
 import React from 'react';
 import { mergeProps, useFocusRing, useTableCell } from 'react-aria';
 import { TableColumnResizeState, TableState } from 'react-stately';
+import { classNames } from '../../utils.ts';
 
 interface TableCellProps<T> {
   cell: GridNode<T>;
@@ -14,21 +15,20 @@ export function TableCell<T>({ cell, state, resizeState }: TableCellProps<T>) {
 
   // react-aria
   const { gridCellProps } = useTableCell({ node: cell }, state, ref);
-  const { focusProps, isFocused, isFocusVisible } = useFocusRing();
-
+  const { focusProps, isFocusVisible } = useFocusRing();
   const width = resizeState?.getColumnWidth(cell.column!.key);
 
   return (
     <td
       {...mergeProps(gridCellProps, focusProps)}
       ref={ref}
-      className="px-2 py-1 text-sm outline-none -outline-offset-4 data-focused:outline-accent-600"
-      data-focused={isFocused || undefined}
-      data-focus-visible={isFocusVisible || undefined}
+      style={{ width, maxWidth: width }}
+      className={classNames(
+        'px-2 py-1 text-sm outline-none -outline-offset-4',
+        isFocusVisible && 'outline-accent-600',
+      )}
     >
-      <div className="truncate" style={{ width }}>
-        {cell.rendered}
-      </div>
+      <div className="truncate">{cell.rendered}</div>
     </td>
   );
 }
