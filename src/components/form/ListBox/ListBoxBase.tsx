@@ -45,7 +45,7 @@ export const ListBoxBase = React.forwardRef(function ListBoxBase<T extends objec
       <ul
         {...listBoxProps}
         ref={mergeRefs(listRef, forwardedRef)}
-        className={twMerge(fieldInputStyle, 'overflow-auto py-1')}
+        className={twMerge(fieldInputStyle, 'cursor-default overflow-auto py-1')}
       >
         {[...state.collection].map((node) =>
           node.type === 'section' ? (
@@ -91,8 +91,8 @@ function OptionGroup<T extends object>({ node, state }: ListBoxItemProps<T>) {
 
 function Option<T extends object>({ node, state }: ListBoxItemProps<T>) {
   const itemRef = React.useRef<HTMLLIElement>(null);
-  const option = useOption({ key: node.key }, state, itemRef);
-  const { optionProps, labelProps, descriptionProps, isSelected, isFocused, isDisabled } = option;
+  const { optionProps, labelProps, descriptionProps, isSelected, isFocused, isDisabled } =
+    useOption({ key: node.key }, state, itemRef);
 
   return (
     <li
@@ -122,7 +122,7 @@ function Option<T extends object>({ node, state }: ListBoxItemProps<T>) {
 
 export function Text({ slot, ...props }: TextProps) {
   const text = React.useContext(TextContext);
-  // Children of `Item` will be rendered as `node.rendered` in `ListBoxBase.Item`.
+  // Children of `Item` will be rendered as `node.rendered` in `Option`.
   if (!text) throw new Error('`Text` component must be a child of `Item`.');
   return <span {...text.props[slot]} {...props} />;
 }

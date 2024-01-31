@@ -52,7 +52,7 @@ export const Controlled: Story = {
           selectedKey={selectedKey}
           onSelectionChange={setSelectedKey}
         />
-        <div className="mx-3 mt-1.5 flex items-center text-xs">
+        <div className="mx-3 mt-1.5 flex items-center text-xs text-gray-900">
           <div className="mr-2">Selected key: {selectedKey}</div>
           <Button className="h-5" onPress={() => setSelectedKey('0')}>
             Reset

@@ -1,6 +1,6 @@
 import { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
-import { ListBox } from './ListBox.tsx';
+import { ListBox, Option } from './ListBox.tsx';
 
 const meta: Meta<typeof ListBox> = {
   component: ListBox,
@@ -23,6 +23,7 @@ export const WithIcons: Story = {
     ]}],
     selectionMode: 'single',
     defaultSelectedKeys: '1',
+    onSelectionChange: undefined,
   },
 };
 
@@ -30,7 +31,7 @@ export const ControlledMultiple: Story = {
   render: function ControlledListBox() {
     const [selectedKeys, setSelectedKeys] = React.useState<Iterable<string>>(['id_sam', 'id_dog']);
     // prettier-ignore
-    const options = [
+    const options: Option[] = [
       { key: 'id_people', label: 'People', children: [
           { key: 'id_david', label: 'David' },
           { key: 'id_sam', label: 'Sam' },

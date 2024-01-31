@@ -31,12 +31,14 @@ export function TableHeader<T>({ header, state, resizeState }: TableHeaderProps<
       <div className="relative">
         <ButtonBase
           onPress={() => state.sort(header.key)}
-          className="flex w-full cursor-default rounded-sm p-1 text-left text-xs font-semibold uppercase text-gray-600 outline-none data-focused:ring-2 data-focused:ring-accent-600"
+          className="h-full w-full cursor-default rounded-sm px-1 py-1.5 text-xs font-semibold uppercase text-gray-600 outline-none data-focus-visible:ring-2 data-focus-visible:ring-accent-600"
         >
-          <span aria-hidden="true" className={classNames('mr-1 flex-none', sortVisible)}>
-            {sortIcon}
-          </span>
-          <span className="mr-3 flex-1 truncate">{header.rendered}</span>
+          <div className="mr-3 truncate">
+            <span aria-hidden="true" className={classNames('mr-1', sortVisible)}>
+              {sortIcon}
+            </span>
+            {header.rendered}
+          </div>
         </ButtonBase>
 
         <Resizer column={header} resizeState={resizeState} />
